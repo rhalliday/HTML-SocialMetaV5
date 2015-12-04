@@ -381,6 +381,7 @@ Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 =head1 TODO
  
     * Add support for more social Card Types / Meta Providers
+    * Additiona Meta Tag Support
  
 =head1 BUGS AND LIMITATIONS
  

@@ -125,7 +125,7 @@ sub _convert_field {
 sub _no_card_type {
     my ( $self, $card_type ) = @_;
     return croak
-q{this card type does not exist try one of these summary, featured_image, app, player};
+        q{this card type does not exist try one of these summary, featured_image, app, player};
 }
 
 #

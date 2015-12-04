@@ -117,7 +117,6 @@ Robert Haliday <robh@cpan.org>
 
 =head1 TODO
  
-    * Improve tests
     * Add support for more social Card Types / Meta Providers
  
 =head1 BUGS AND LIMITATIONS
