@@ -216,7 +216,7 @@ Create the Meta Tags - this returns the meta information for all the providers:
 
 You just need to specify the card type on create
 
-        $social->create(card => 'summary | feature_image')
+        $social->create('summary | feature_image')
 
 # AUTHORS
 
