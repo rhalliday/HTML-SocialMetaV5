@@ -49,7 +49,7 @@ sub create_card{
     # the required fields needed to build a twitter summary card
     my @fields = ( 'name', 'description', 'image');
 
-    return $self->build_schema_meta_tags(@fields);
+    return $self->build_meta_tags(@fields);
 }
 
 

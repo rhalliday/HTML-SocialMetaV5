@@ -56,38 +56,6 @@ sub build_meta_tags {
    return join("\n", @meta_tags);
 }
 
-
-=head2 build_schema_meta_tags 
-
-This builds the meta tags for Schema.org / Google products
-
-Firstly it adds generic meta data which is used in several google products including search snippets.
-
-Then we replicate build_meta_tags using the passed in fields to generate the meta information. I'm currently only 
-catering for the google+ Article Card. However I will look into expanding on this.
-
-=cut
-
-sub build_schema_meta_tags {
-    my ($self, @fields) = @_;
-
-    my @meta_tags;  
-    # specifiying this is an Google Article - eventually this will be modified
-    push @meta_tags, '<html itemscope itemtype="http://schema.org/Article">';
-
-    # google snippet
-    push @meta_tags, '<title>' . $self->name .  '</title>';
-    push @meta_tags, '<meta name="description" content="' . $self->description . '">';
-
-    foreach my $field (@fields){
-        # check the field has a value set
-        $self->_validate_field_value($field);
-        push @meta_tags, '<meta ' . $self->meta_attribute . '="' . $field . '" content="' . $self->$field . '"/>';  
-    }
- 
-    return join("\n", @meta_tags); 
-}
-
 sub _validate_field_value {
     my ($self, $field) = @_;
 	
