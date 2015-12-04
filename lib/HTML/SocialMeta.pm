@@ -82,9 +82,15 @@ This module currently only supports the following card types, it will expand ove
 
 	# returns meta tags specificly for a single provider
 	my $twitter_tags = $social->twitter;
-	my $opengraph_tags = $social->pengraph;
+	my $opengraph_tags = $social->opengraph;
 	my $schema = $social->create->schema
 
+	my $twitter->create('summary' | 'featured_image');
+	
+	# Alternatively call a card directly
+	my $summary_card = $meta_tags->twitter->create_summary_card;
+	
+	....
 	# You then need to insert these meta tags in the head of your html, 
 	# one way of implementing this if you are using Catalyst and Template Toolkit would be ..
 	# controller 
@@ -195,7 +201,7 @@ price and app info pulled from the app stores?
 
 =cut
 
-has 'card_type' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
+has 'card_type' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
 has 'card' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
 has 'site' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
 has 'site_name' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
@@ -233,8 +239,10 @@ You just need to specify the card type on create
 sub create {
 	my ($self, $card_type) = @_;
 	
-	$card_type = $card_type || $self->card_type;
-
+	$card_type ||= $self->card_type;
+	
+	$self->card_type($card_type);
+	
 	my @meta_tags =  map { $self->$_->create() } qw/schema twitter opengraph/;
 	
 	return join("\n", @meta_tags); 
@@ -244,7 +252,7 @@ sub _build_twitter{
 	my $self = shift;
   
   	my $twitter = HTML::SocialMeta::Twitter->new( 
-    	card => $self->card,
+    	card_type => $self->card_type,
     	site => $self->site,
     	title => $self->title,
     	description => $self->description,
@@ -266,7 +274,7 @@ sub _build_opengraph{
     my $self = shift;
 
     my $open_graph = HTML::SocialMeta::OpenGraph->new( 
-    	type => $self->card,
+    	card_type => $self->card_type,
     	site_name => $self->site_name,
     	title => $self->title,
     	description => $self->description,

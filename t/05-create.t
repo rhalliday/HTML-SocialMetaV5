@@ -7,7 +7,7 @@ use_ok( 'HTML::SocialMeta' );
 
 # Build Some Test Data Which Is Valid
 my $meta_tags = HTML::SocialMeta->new(
-    card => 'summary',
+    card_type => 'summary',
     site => '@example_twitter',
     site_name => 'Example Site, anything',
     title => 'You can have any title you wish here',
@@ -38,6 +38,28 @@ my $test_create_all = '<html itemscope itemtype="http://schema.org/Article">
 <meta property="og:site_name" content="Example Site, anything"/>';
 
 is($tags, $test_create_all);
+
+my $twitter_tags = $meta_tags->twitter;
+my $twitter_create = $twitter_tags->create('featured_image');
+
+my $test_twitter_featured = '<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:site" content="@example_twitter"/>
+<meta name="twitter:title" content="You can have any title you wish here"/>
+<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>';
+
+is($twitter_create, $test_twitter_featured);
+
+# check we still have the original card_type passed in available
+my $generic_twitter_create = $twitter_tags->create();
+
+my $test_twitter = '<meta name="twitter:card" content="summary"/>
+<meta name="twitter:site" content="@example_twitter"/>
+<meta name="twitter:title" content="You can have any title you wish here"/>
+<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>';
+
+is($generic_twitter_create, $test_twitter);
 
 done_testing();
 

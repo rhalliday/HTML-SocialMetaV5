@@ -27,7 +27,8 @@ has 'meta_namespace' => ( isa => 'Str',  is => 'ro', required => 1, default => '
 
 sub create {
     my ($self, $card_type) = @_;
-    my $card_type = $card_type || $self->card_type;
+    
+    $card_type ||= $self->card_type;
 
     if ($card_type eq 'summary'){
         return $self->create_summary_card;
@@ -53,6 +54,7 @@ Required Fields
 
 sub create_summary_card{
     my ($self) = @_;
+    
     $self->card('summary');
     # the required fields needed to build a twitter summary card
     my @fields = ( 'card', 'site', 'title', 'description', 'image' );

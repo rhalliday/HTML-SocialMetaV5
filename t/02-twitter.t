@@ -9,7 +9,7 @@ use_ok( 'HTML::SocialMeta::Twitter' );
 
 # Build Some Test Data Which Is Valid
 my $meta_tags = HTML::SocialMeta->new(
-    card_type => 'summary'
+    card_type => 'summary',
     site => '@example_twitter',
     site_name => 'Example Site, anything',
     title => 'You can have any title you wish here',
