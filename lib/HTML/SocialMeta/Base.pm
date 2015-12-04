@@ -14,6 +14,7 @@ builds and returns the Meta Tags
 =cut
 
 # A list of fields which the cards may possibly use
+has 'card_type' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
 has 'card' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
 has 'type' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
 has 'name' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
@@ -40,6 +41,7 @@ that we have a value set and then actually building the specific tag
 for that field.
 
 =cut
+
 sub build_meta_tags {
     my ($self, @fields) = @_;
 

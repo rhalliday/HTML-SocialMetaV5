@@ -195,6 +195,7 @@ price and app info pulled from the app stores?
 
 =cut
 
+has 'card_type' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
 has 'card' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
 has 'site' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
 has 'site_name' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
@@ -232,7 +233,7 @@ You just need to specify the card type on create
 sub create {
 	my ($self, $card_type) = @_;
 	
-	$card_type = $card_type | $self->card;
+	$card_type = $card_type || $self->card_type;
 
 	my @meta_tags =  map { $self->$_->create() } qw/schema twitter opengraph/;
 	

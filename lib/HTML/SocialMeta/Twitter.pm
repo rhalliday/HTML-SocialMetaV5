@@ -26,8 +26,8 @@ has 'meta_namespace' => ( isa => 'Str',  is => 'ro', required => 1, default => '
 =cut
 
 sub create {
-    my ($self) = @_;
-    my $card_type = $self->card_type;
+    my ($self, $card_type) = @_;
+    my $card_type = $card_type || $self->card_type;
 
     if ($card_type eq 'summary'){
         return $self->create_summary_card;
