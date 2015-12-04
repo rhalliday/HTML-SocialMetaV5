@@ -2,35 +2,137 @@ package HTML::SocialMeta::Base;
 use Moose;
 use namespace::autoclean;
 use Carp;
+our $VERSION = '0.1';
+
+# A list of fields which the cards may possibly use
+has 'card_type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'card'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'type'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'name'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'site'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'url'            => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'site_name'      => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'title'          => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'description'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'image'          => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_country'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_name_store' => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_id_store'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_url_store'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_name_play'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_id_play'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_url_play'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+
+sub build_meta_tags {
+    my ( $self, @fields ) = @_;
+
+    my @meta_tags;
+    foreach my $field (@fields) {
+
+        # check the field has a value set
+        $self->_validate_field_value($field);
+
+        push @meta_tags, $self->_generate_meta_tag($field);
+    }
+
+    return join "\n", @meta_tags;
+}
+
+sub _validate_field_value {
+    my ( $self, $field ) = @_;
+
+    # look to see we have the fields atrribute set
+    croak q{you have not set this field value } . $field
+      if !$self->$field;
+
+    return;
+}
+
+sub _generate_meta_tag {
+    my ( $self, $field ) = @_;
+
+    # just build the meta tag if this is not an app field
+    return $self->_build_field($field) if $field !~ m{^app}xms;
+
+    my @tags = ();
+
+    for ( @{ $self->_convert_field($field) } ) {
+        push @tags, $self->_build_field( $field, $_ );
+    }
+
+    return @tags;
+}
+
+sub _build_field {
+    my ( $self, $field, $field_type ) = @_;
+
+    $field_type = $field_type ? $field_type : $field;
+
+    return
+        q{<meta }
+      . $self->meta_attribute . q{="}
+      . $self->meta_namespace . q{:}
+      . $field_type
+      . q{" content="}
+      . $self->$field . q{"/>};
+}
+
+sub _convert_field {
+    my ( $self, $field ) = @_;
+
+    $field =~ tr/_/:/;
+
+    my @app_fields;
+    if ( $field =~ s{store}{}xms ) {
+
+        push @app_fields, $field . 'iphone';
+        push @app_fields, $field . 'ipad';
+
+    }
+    elsif ( $field =~ s{ play }{}xms ) {
+
+        push @app_fields, $field . 'googleplay';
+
+    }
+    else {
+
+        push @app_fields, $field;
+
+    }
+
+    return \@app_fields;
+}
+
+#
+# The End
+#
+__PACKAGE__->meta->make_immutable;
+
+1;
+
+__END__
 
 =head1 NAME
 
-HTML::SocialMeta::BASE - Base class for the different meta classes.
-
+HTML::SocialMeta::Base
+ 
 =head1 DESCRIPTION
+
+Base class for the different meta classes.
 
 builds and returns the Meta Tags
 
 =cut
 
-# A list of fields which the cards may possibly use
-has 'card_type' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
-has 'card' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
-has 'type' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
-has 'name' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
-has 'site' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'url' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'site_name' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'title' => ( isa => 'Str',  is => 'ro',  lazy => 1, default => '' );
-has 'description' => ( isa => 'Str',  is => 'ro',  lazy => 1, default => '' );
-has 'image' => ( isa => 'Str',  is => 'ro',  lazy => 1, default => '' );
-has 'app_country' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_name_store' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_id_store' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_url_store' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_name_play' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_id_play' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_url_play' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
+=head1 VERSION
+
+Version 0.01
+
+=cut
+
+=head1 SYNOPSIS
+
+=head1 SUBROUTINES/METHODS
 
 =head2 build_meta_tags 
 
@@ -42,83 +144,67 @@ for that field.
 
 =cut
 
-sub build_meta_tags {
-    my ($self, @fields) = @_;
+=head1 AUTHOR
 
-    my @meta_tags;
-    foreach my $field (@fields){
-        # check the field has a value set
-        $self->_validate_field_value($field);
+Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 
-        push @meta_tags, $self->_generate_meta_tag($field);
-    }
+With special thanks to:
+Robert Haliday <robh@cpan.org>
 
-   return join("\n", @meta_tags);
-}
+=head1 TODO
+ 
+    * Improve tests
+    * Add support for more social Card Types / Meta Providers
+ 
+=head1 BUGS AND LIMITATIONS
+ 
+Most probably. Please report any bugs at http://rt.cpan.org/.
 
-sub _validate_field_value {
-    my ($self, $field) = @_;
-	
-	# look to see we have the fields atrribute set
-    croak "you have not set this field value " . $field unless 
-        $self->$field;
+=head1 INCOMPATIBILITIES
 
-    return;
-}
+=head1 DEPENDENCIES
 
-sub _generate_meta_tag {
-    my ($self, $field) = @_;
+=head1 CONFIGURATION AND ENVIRONMENT
 
-    # just build the meta tag if this is not an app field
-    return $self->_build_field($field) if $field !~ /^app/;
-
-    my @tags = ();
-    # convert the field into separate apps and get the tags
-    push @tags, $self->_build_field($field, $_) for (@{$self->_convert_field($field)});
-
-    return @tags;
-}
-
-sub _build_field {
-  my ($self, $field, $field_type) = @_;
-
-  $field_type = $field_type ? $field_type : $field;
-
-  return '<meta ' . $self->meta_attribute . '="' . $self->meta_namespace . ':' . $field_type . '" content="' . $self->$field . '"/>';  
-}
-
-sub _convert_field {
-    my ($self, $field) = @_;
-   
-    $field =~ tr/_/:/;
-
-    my @app_fields;
-    if ( $field =~ s/store// ) {
-
-        push @app_fields, $field . 'iphone';
-        push @app_fields, $field . 'ipad';  
-
-    } elsif ($field =~ s/play//){
-
-        push @app_fields, $field . 'googleplay';
-
-    } else {
-
-        push @app_fields, $field;
-
-    }
-
-    return \@app_fields;
-}
-
-
-
-
-#
-# The End
-#
-__PACKAGE__->meta->make_immutable;
-
-1;
+=head1 DIAGNOSTICS 
 
 =head1 LICENSE AND COPYRIGHT
+ 
+Copyright 2015 Robert Acock.
+ 
+This program is free software; you can redistribute it and/or modify it
+under the terms of the the Artistic License (2.0). You may obtain a
+copy of the full license at:
+ 
+L<http://www.perlfoundation.org/artistic_license_2_0>
+ 
+Any use, modification, and distribution of the Standard or Modified
+Versions is governed by this Artistic License. By using, modifying or
+distributing the Package, you accept this license. Do not use, modify,
+or distribute the Package, if you do not accept this license.
+ 
+If your Modified Version has been derived from a Modified Version made
+by someone other than you, you are nevertheless required to ensure that
+your Modified Version complies with the requirements of this license.
+ 
+This license does not grant you the right to use any trademark, service
+mark, tradename, or logo of the Copyright Holder.
+ 
+This license includes the non-exclusive, worldwide, free-of-charge
+patent license to make, have made, use, offer to sell, sell, import and
+otherwise transfer the Package with respect to any patent claims
+licensable by the Copyright Holder that are necessarily infringed by the
+Package. If you institute patent litigation (including a cross-claim or
+counterclaim) against any party alleging that the Package constitutes
+direct or contributory patent infringement, then this Artistic License
+to you shall terminate on the date that such litigation is filed.
+ 
+Disclaimer of Warranty: THE PACKAGE IS PROVIDED BY THE COPYRIGHT HOLDER
+AND CONTRIBUTORS "AS IS' AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES.
+THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, OR NON-INFRINGEMENT ARE DISCLAIMED TO THE EXTENT PERMITTED BY
+YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
+CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
+CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
+EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+

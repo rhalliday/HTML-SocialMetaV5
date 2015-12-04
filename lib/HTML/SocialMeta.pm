@@ -6,6 +6,111 @@ use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 use HTML::SocialMeta::Schema;
 
+our $VERSION = '0.1';
+
+has 'card_type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'card'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'site'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'site_name'      => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'title'          => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'description'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'image'          => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'url'            => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'creator'        => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_country'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_name_store' => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_id_store'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_url_store'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_name_play'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_id_play'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'app_url_play'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+
+has 'twitter' => (
+    isa     => 'HTML::SocialMeta::Twitter',
+    is      => 'ro',
+    lazy    => 1,
+    builder => '_build_twitter',
+);
+
+has 'opengraph' => (
+    isa     => 'HTML::SocialMeta::OpenGraph',
+    is      => 'ro',
+    lazy    => 1,
+    builder => '_build_opengraph',
+);
+
+has 'schema' => (
+    isa        => 'HTML::SocialMeta::Schema',
+    is         => 'ro',
+    lazy_build => 1,
+    builder    => '_build_schema',
+);
+
+sub create {
+    my ( $self, $card_type ) = @_;
+
+    $card_type ||= $self->card_type;
+
+    $self->card_type($card_type);
+
+    my @meta_tags = map { $self->$_->create() } qw/schema twitter opengraph/;
+
+    return join "\n", @meta_tags;
+}
+
+sub _build_twitter {
+    my $self = shift;
+
+    return HTML::SocialMeta::Twitter->new(
+        card_type      => $self->card_type,
+        site           => $self->site,
+        title          => $self->title,
+        description    => $self->description,
+        image          => $self->image,
+        url            => $self->url,
+        creator        => $self->creator,
+        app_country    => $self->app_country,
+        app_name_store => $self->app_name_store,
+        app_id_store   => $self->app_id_store,
+        app_url_store  => $self->app_url_store,
+        app_name_play  => $self->app_name_play,
+        app_id_play    => $self->app_id_play,
+        app_url_play   => $self->app_url_play,
+    );
+}
+
+sub _build_opengraph {
+    my $self = shift;
+
+    return HTML::SocialMeta::OpenGraph->new(
+        card_type   => $self->card_type,
+        site_name   => $self->site_name,
+        title       => $self->title,
+        description => $self->description,
+        image       => $self->image,
+        url         => $self->url,
+    );
+}
+
+sub _build_schema {
+    my $self = shift;
+
+    return HTML::SocialMeta::Schema->new(
+        name        => $self->title,
+        description => $self->description,
+        image       => $self->image,
+    );
+}
+
+#
+# The End
+#
+__PACKAGE__->meta->make_immutable;
+
+1;
+
+__END__
+
 =head1 NAME
 
 HTML::SocialMeta - Module to generate Social Media Meta Tags, 
@@ -15,8 +120,6 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 Version 0.01
 
 =cut
-
-our $VERSION = '0.1';
 
 =head1 DESCRIPTION
 
@@ -98,7 +201,7 @@ This module currently only supports the following card types, it will expand ove
 	# template
 	[% meta_tags | html %]
 
-=head1 METHODS
+=head1 SUBROUTINES/METHODS
 
 =head2 new
 
@@ -223,27 +326,6 @@ price and app info pulled from the app stores?
 
 =cut
 
-has 'card_type' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
-has 'card' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'site' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'site_name' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'title' => ( isa => 'Str',  is => 'ro',  lazy => 1, default => '' );
-has 'description' => ( isa => 'Str',  is => 'ro',  lazy => 1, default => '' );
-has 'image' => ( isa => 'Str',  is => 'ro',  lazy => 1, default => '' );
-has 'url' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'creator' => ( isa => 'Str',  is => 'ro',  lazy => 1, default => '' );
-has 'app_country' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_name_store' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_id_store' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_url_store' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_name_play' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_id_play' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-has 'app_url_play' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
-
-has 'twitter' => ( isa => 'HTML::SocialMeta::Twitter', is => 'ro', lazy => 1, builder => '_build_twitter');
-has 'opengraph' => ( isa => 'HTML::SocialMeta::OpenGraph', is => 'ro', lazy => 1, builder => '_build_opengraph' );
-has 'schema' => ( isa => 'HTML::SocialMeta::Schema', is => 'ro', lazy_build => 1, builder => '_build_schema' );
-
 =head2 create
 
 Create the Meta Tags - this returns the meta information for all the providers:
@@ -258,86 +340,27 @@ You just need to specify the card type on create
 
 =cut
 
-sub create {
-	my ($self, $card_type) = @_;
-	
-	$card_type ||= $self->card_type;
-	
-	$self->card_type($card_type);
-	
-	my @meta_tags =  map { $self->$_->create() } qw/schema twitter opengraph/;
-	
-	return join("\n", @meta_tags); 
-}
-
-sub _build_twitter{
-	my $self = shift;
-  
-  	my $twitter = HTML::SocialMeta::Twitter->new( 
-    	card_type => $self->card_type,
-    	site => $self->site,
-    	title => $self->title,
-    	description => $self->description,
-    	image => $self->image, 
-    	url => $self->url, 
-    	creator => $self->creator,  
-    	app_country => $self->app_country,
-    	app_name_store => $self->app_name_store,
-    	app_id_store => $self->app_id_store,
-    	app_url_store => $self->app_url_store,
-    	app_name_play => $self->app_name_play,
-    	app_id_play => $self->app_id_play,
-    	app_url_play => $self->app_url_play,
-    );
-};
-
-
-sub _build_opengraph{
-    my $self = shift;
-
-    my $open_graph = HTML::SocialMeta::OpenGraph->new( 
-    	card_type => $self->card_type,
-    	site_name => $self->site_name,
-    	title => $self->title,
-    	description => $self->description,
-    	image => $self->image, 
-    	url => $self->url, 
-    );
-}
-
-sub _build_schema {
-	my $self = shift;
-
-	my $google = HTML::SocialMeta::Schema->new(
-		name => $self->title,
-		description => $self->description,
-		image => $self->image,
-	);
-}
-
-#
-# The End
-#
-__PACKAGE__->meta->make_immutable;
-
-1;
-
-=head1 AUTHORS
+=head1 AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
-
-With special thanks to:
-Robert Haliday <robh@cpan.org>
 
 =head1 TODO
  
     * Improve tests
     * Add support for more social Card Types / Meta Providers
  
-=head1 BUGS
+=head1 BUGS AND LIMITATIONS
  
 Most probably. Please report any bugs at http://rt.cpan.org/.
- 
+
+=head1 INCOMPATIBILITIES
+
+=head1 DEPENDENCIES
+
+=head1 CONFIGURATION AND ENVIRONMENT
+
+=head1 DIAGNOSTICS
+
 =head1 LICENSE AND COPYRIGHT
  
 Copyright 2015 Robert Acock.
