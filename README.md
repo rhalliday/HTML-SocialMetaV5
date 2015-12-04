@@ -41,11 +41,11 @@ It generates all the required META data that is needed to create social cards fo
 
 These are then supported on the following sites, just to name a few
 
-    * Facebook
-    * LinkedIn
-    * Reddit
-    * Pinerest
-    * Twitter
+        * Facebook
+        * LinkedIn
+        * Reddit
+        * Pinerest
+        * Twitter
 
 This module currently only supports the following card types, it will expand over time
 
@@ -55,15 +55,15 @@ This module currently only supports the following card types, it will expand ove
 
 # SYNOPSIS
 
-    use HTML::SocialMeta;
+        use HTML::SocialMeta;
 
-    my $social = HTML::SocialCards->new(
-        card_type => '...',
-        site => '',
-        title => '',
-        description => '',
-        image   => ''
-    );
+        my $social = HTML::SocialCards->new(
+                card_type => '...',
+                site => '',
+                title => '',
+                description => '',
+                image   => ''
+        );
 
         # returns meta tags for all providers   
         my $meta_tags = $social->create;
@@ -92,43 +92,51 @@ This module currently only supports the following card types, it will expand ove
 
 Returns an instance of this class. Requires `$url` as an argument;
 
-    my $social = URL::Social->new(
-        card => '...',          * card type - currently either summary or featured_image
-        site => '',                     * twitter site - @twitter_handle 
-        site_name => '',        * sites name - Example Business
-        title => '',            * card title - title of the card 
-        description => '',      * description - content of the card
-        image => '',            * attached image - url http/www.someurl.com/test.jpg
-        url => '',                      * url where the content is hosted, or url to some completly randon html page
-        ... => '',
-        ... => '',
-    );
+        my $social = URL::Social->new(
+                card => '...',          * card type - currently either summary or featured_image
+                site => '',                     * twitter site - @twitter_handle 
+                site_name => '',        * sites name - Example Business
+                title => '',            * card title - title of the card 
+                description => '',      * description - content of the card
+                image => '',            * attached image - url http/www.someurl.com/test.jpg
+                url => '',                      * url where the content is hosted, or url to some completly randon html page
+                ... => '',
+                ... => '',
+        );
 
-,-----------------------------------,
-|   TITLE                 \*-------\* |
-|                         |       | |
-|   DESCRIPTION           |       | |
-|                         \*-------\* |
-\*-----------------------------------\*
+## Summary Card
 
-Summary Card:
+        ,-----------------------------------,
+        |   TITLE                 *-------* |
+        |                         |       | |
+        |   DESCRIPTION           |       | |
+        |                         *-------* |
+        *-----------------------------------*
 
-    card => 'summary'
+Returns an instance for the summary card:
+
+        card => 'summary'
+
+or	
+
+        $meta->create('summary');
 
 or
 
-    my $twitter_summary_card = $social->twitter->create_summary_card;
-    my $opengraph_thumbnail_card = $social->opengraph->create_thumbnail_card;
-    my $schema_tags = $social->schema->create_card;
+        my $twitter_summary_card = $social->twitter->create_summary_card;
+        my $opengraph_thumbnail_card = $social->opengraph->create_thumbnail_card;
+        my $schema_tags = $social->schema->create_card;
 
 fields required:
 
-\* card   
-\* site\_name - OpenGraph
-\* site - Twitter Site
-\* title
-\* description
-\* image
+        * card   
+        * site_name - OpenGraph
+        * site - Twitter Site
+        * title
+        * description
+        * image
+
+## Featured Image Card
 
 ,-----------------------------------,
 | \*-------------------------------\* |
@@ -143,9 +151,13 @@ fields required:
 |  DESCRIPTION                      |
 \*-----------------------------------\*
 
-Featured Image Card:
+Returns an instance for the featured image card:
 
         card => 'featured_image' 
+
+or
+
+        $card->create('featured_image');        
 
 or
 
@@ -154,36 +166,40 @@ or
 
 Fields Required:
 
-\* card - Twitter
-\* site - Twitter
-\* site\_name  - Open Graph
-\* creator - Twitter
-\* title
-\* image
-\* url - Open Graph
+        * card - Twitter
+        * site - Twitter
+        * site_name  - Open Graph
+        * creator - Twitter
+        * title
+        * image
+        * url - Open Graph
 
-,-----------------------------------,
-|   APP NAME              \*-------\* |
-|   APP INFO              |  app  | |
-|                         | image | |
-|   PRICE                 \*-------\* |
-|   DESCRIPTION                     |
-\*-----------------------------------\*
-App Card:
+## App Card
+
+        ,-----------------------------------,
+        |   APP NAME              *-------* |
+        |   APP INFO              |  app  | |
+        |                         | image | |
+        |   PRICE                 *-------* |
+        |   DESCRIPTION                     |
+        *-----------------------------------*
+
+Return an instance for the provider specific app card:
 
         my $twitter_app_card = $social->twitter->create_app_card;
 
 Fields Required
-\* card
-\* site
-\* description
-\* app\_country
-\* app\_name\_store
-\* app\_id\_store
-\* app\_url\_store
-\* app\_id\_play
-\* app\_id\_play
-\* app\_id\_play
+
+        * card
+        * site
+        * description
+        * app_country
+        * app_name_store
+        * app_id_store
+        * app_url_store
+        * app_id_play
+        * app_id_play
+        * app_id_play
 
 price and app info pulled from the app stores?
 
@@ -253,3 +269,11 @@ YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
 CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
 CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# POD ERRORS
+
+Hey! **The above document had some coding errors, which are explained below:**
+
+- Around line 224:
+
+    &#x3d;cut found outside a pod block.  Skipping to next block.
