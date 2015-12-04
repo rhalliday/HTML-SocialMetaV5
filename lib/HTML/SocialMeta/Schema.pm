@@ -96,6 +96,10 @@ Base class for creating Schema meta data
 
 =head1 SUBROUTINES/METHODS
 
+=head2 create
+
+=cut
+
 =head2 build_meta_tags 
 
 OVERIDE build_meta_tags
