@@ -22,7 +22,7 @@ our $VERSION = '0.1';
 
 This module makes it easy to create social meta cards.
 
-i.e  $social->create(card => 'summary') will generate:
+i.e  $social->create('summary') will generate:
 	
 	<html itemscope itemtype="http://schema.org/Article">
 	<title>You can have any title you wish here</title>
