@@ -221,8 +221,6 @@ price and app info pulled from the app stores?
 
 =cut
 
-=cut
-
 has 'card_type' => ( isa => 'Str',  is => 'rw', lazy => 1, default => '' );
 has 'card' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
 has 'site' => ( isa => 'Str',  is => 'ro', lazy => 1, default => '' );
