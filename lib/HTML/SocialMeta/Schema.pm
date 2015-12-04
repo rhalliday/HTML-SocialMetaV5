@@ -66,7 +66,7 @@ catering for the google+ Article Card. However I will look into expanding on thi
 
 =cut
 
-sub build_meta_tags {
+override build_meta_tags => sub {
     my ($self, @fields) = @_;
 
     my @meta_tags;  
@@ -85,15 +85,15 @@ sub build_meta_tags {
     }
  
     return join("\n", @meta_tags); 
-}
+};
 
-sub _build_field {
+override _build_field => sub {
   my ($self, $field, $field_type) = @_;
 
   $field_type = $field_type ? $field_type : $field;
 
   return '<meta ' . $self->meta_attribute . '="' . $field . '" content="' . $self->$field . '"/>';  
-}
+};
 
 #
 # The End
