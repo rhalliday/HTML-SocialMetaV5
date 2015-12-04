@@ -192,6 +192,8 @@ Fields Required:
 
 =head2 App Card
 
+*Currently only supporting the App card for twitter on the TODO list
+
 	,-----------------------------------,
 	|   APP NAME              *-------* |
 	|   APP INFO              |  app  | |
@@ -338,7 +340,7 @@ Most probably. Please report any bugs at http://rt.cpan.org/.
  
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2013-2014 Tore Aursand.
+Copyright 2015 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
