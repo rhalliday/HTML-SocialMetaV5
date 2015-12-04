@@ -6,7 +6,7 @@ use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 use HTML::SocialMeta::Schema;
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 
 has 'card_type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has 'card'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
@@ -24,6 +24,9 @@ has 'app_url_store'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'app_name_play'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'app_id_play'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'app_url_play'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'player'         => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'player_height'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'player_width'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 
 has 'twitter' => (
     isa     => 'HTML::SocialMeta::Twitter',
@@ -76,6 +79,9 @@ sub _build_twitter {
         app_name_play  => $self->app_name_play,
         app_id_play    => $self->app_id_play,
         app_url_play   => $self->app_url_play,
+        player         => $self->player,
+        player_width   => $self->player_width,
+        player_height  => $self->player_height,
     );
 }
 
@@ -117,7 +123,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.01
+Version 0.2
 
 =cut
 
@@ -162,26 +168,28 @@ These are then supported on the following sites, just to name a few
     	* Pinerest
     	* Twitter
 
-This module currently only supports the following card types, it will expand over time
+This module currently only following card types:
 
-	* summary - thumbnail image on the left hand side, with title and description on the right 
+	* summary -thumbnail image on the left hand side, with title and description on the right 
 	* featured_image - full featured image with text underneath
 	* app - App Card
+	* video - Video Card
 
 =head1 SYNOPSIS
 
-    	use HTML::SocialMeta;
-
+    use HTML::SocialMeta;
+	# summary or featured image 
 	my $social = HTML::SocialCards->new(
-		card_type => '...',
 		site => '',
+		site_name => '',
 		title => '',
 		description => '',
-		image	=> ''
+		image	=> '',
+		url  => '',  # optional
 	);
 
 	# returns meta tags for all providers	
-	my $meta_tags = $social->create;
+	my $meta_tags = $social->create('summary | featured_image | app | player');
 
 	# returns meta tags specificly for a single provider
 	my $twitter_tags = $social->twitter;
@@ -295,7 +303,7 @@ Fields Required:
 
 =head2 App Card
 
-*Currently only supporting the App card for twitter on the TODO list
+*Currently only supporting the App card for twitter
 
 	,-----------------------------------,
 	|   APP NAME              *-------* |
@@ -311,7 +319,6 @@ Return an instance for the provider specific app card:
 
 Fields Required
 
-	* card
 	* site
 	* description
 	* app_country
@@ -326,6 +333,33 @@ price and app info pulled from the app stores?
 
 =cut
 
+=head2 Player Card
+
+*Currently only supporting the Player card for twitter
+
+	,-----------------------------------,
+	| Title								|	
+	| link								|
+	| *-------------------------------* |
+	| |                               | |
+	| |                               | |
+	| |                               | |
+	| |            <play>             | |
+	| |                               | |
+	| |                               | |
+	| *-------------------------------* |
+	*-----------------------------------*
+
+Fields Required:
+ 
+    * site 
+    * title 
+    * description 
+    * image 
+    * player 
+    * player_width 
+    * player_height
+
 =head2 create
 
 Create the Meta Tags - this returns the meta information for all the providers:
@@ -336,7 +370,7 @@ Create the Meta Tags - this returns the meta information for all the providers:
 	
 You just need to specify the card type on create
 
-	$social->create('summary | feature_image')
+	$social->create('summary | featured_image | app | player');
 
 =cut
 
@@ -346,12 +380,11 @@ Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 
 =head1 TODO
  
-    * Improve tests
     * Add support for more social Card Types / Meta Providers
  
 =head1 BUGS AND LIMITATIONS
  
-Most probably. Please report any bugs at http://rt.cpan.org/.
+Please report any bugs at http://rt.cpan.org/.
 
 =head1 INCOMPATIBILITIES
 

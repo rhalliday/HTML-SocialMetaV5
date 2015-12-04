@@ -4,7 +4,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 # VERSION
 
-Version 0.01
+Version 0.2
 
 # DESCRIPTION
 
@@ -47,26 +47,28 @@ These are then supported on the following sites, just to name a few
         * Pinerest
         * Twitter
 
-This module currently only supports the following card types, it will expand over time
+This module currently only following card types:
 
-        * summary - thumbnail image on the left hand side, with title and description on the right 
+        * summary -thumbnail image on the left hand side, with title and description on the right 
         * featured_image - full featured image with text underneath
         * app - App Card
+        * video - Video Card
 
 # SYNOPSIS
 
-        use HTML::SocialMeta;
-
+    use HTML::SocialMeta;
+        # summary or featured image 
         my $social = HTML::SocialCards->new(
-                card_type => '...',
                 site => '',
+                site_name => '',
                 title => '',
                 description => '',
-                image   => ''
+                image   => '',
+                url  => '',  # optional
         );
 
         # returns meta tags for all providers   
-        my $meta_tags = $social->create;
+        my $meta_tags = $social->create('summary | featured_image | app | player');
 
         # returns meta tags specificly for a single provider
         my $twitter_tags = $social->twitter;
@@ -86,7 +88,7 @@ This module currently only supports the following card types, it will expand ove
         # template
         [% meta_tags | html %]
 
-# METHODS
+# SUBROUTINES/METHODS
 
 ## new
 
@@ -176,7 +178,7 @@ Fields Required:
 
 ## App Card
 
-\*Currently only supporting the App card for twitter on the TODO list
+\*Currently only supporting the App card for twitter
 
         ,-----------------------------------,
         |   APP NAME              *-------* |
@@ -192,7 +194,6 @@ Return an instance for the provider specific app card:
 
 Fields Required
 
-        * card
         * site
         * description
         * app_country
@@ -205,6 +206,33 @@ Fields Required
 
 price and app info pulled from the app stores?
 
+## Player Card
+
+\*Currently only supporting the Player card for twitter
+
+        ,-----------------------------------,
+        | Title                                                         |       
+        | link                                                          |
+        | *-------------------------------* |
+        | |                               | |
+        | |                               | |
+        | |                               | |
+        | |            <play>             | |
+        | |                               | |
+        | |                               | |
+        | *-------------------------------* |
+        *-----------------------------------*
+
+Fields Required:
+
+    * site 
+    * title 
+    * description 
+    * image 
+    * player 
+    * player_width 
+    * player_height
+
 ## create
 
 Create the Meta Tags - this returns the meta information for all the providers:
@@ -216,24 +244,28 @@ Create the Meta Tags - this returns the meta information for all the providers:
 
 You just need to specify the card type on create
 
-        $social->create('summary | feature_image')
+        $social->create('summary | featured_image | app | player');
 
-# AUTHORS
+# AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 
-With special thanks to:
-Robert Haliday &lt;robh@cpan.org>
-
 # TODO
 
-       * Improve tests
        * Add support for more social Card Types / Meta Providers
     
 
-# BUGS
+# BUGS AND LIMITATIONS
 
-Most probably. Please report any bugs at http://rt.cpan.org/.
+Please report any bugs at http://rt.cpan.org/.
+
+# INCOMPATIBILITIES
+
+# DEPENDENCIES
+
+# CONFIGURATION AND ENVIRONMENT
+
+# DIAGNOSTICS
 
 # LICENSE AND COPYRIGHT
 

@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 use Carp;
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 
 extends 'HTML::SocialMeta::Base';
 
@@ -13,19 +13,11 @@ has 'meta_attribute' =>
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'og' );
 
-sub create {
-    my ( $self, $card_type ) = @_;
-
-    $card_type ||= $self->card_type;
-
-    if ( $card_type eq 'summary' ) {
-        return $self->create_thumbnail_card;
-    }
-    elsif ( $card_type eq 'featured_image' ) {
-        return $self->create_article_card;
-    }
-
-    return $self->_no_card_type($card_type);
+sub card_options {
+    return (
+        summary        => 'create_thumbnail_card',
+        featured_image => 'create_article_card',
+    );
 }
 
 sub create_thumbnail_card {
@@ -65,7 +57,7 @@ HTML::SocialMeta::OpenGraph
 
 =head1 VERSION
 
-Version 0.01
+Version 0.2
 
 =cut
 

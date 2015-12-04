@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 use Carp;
 
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 
 extends 'HTML::SocialMeta::Base';
 
@@ -13,11 +13,11 @@ has 'meta_attribute' =>
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => q{} );
 
-sub create {
+override create => sub {
     my ($self) = @_;
 
     return $self->create_card;
-}
+};
 
 sub create_card {
     my ($self) = @_;
@@ -80,7 +80,7 @@ HTML::SocialMeta::Schema
 
 =head1 VERSION
 
-Version 0.01
+Version 0.2
 
 =cut
 

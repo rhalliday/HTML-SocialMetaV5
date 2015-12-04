@@ -6,7 +6,7 @@ use Carp;
 
 extends 'HTML::SocialMeta::Base';
 
-our $VERSION = '0.1';
+our $VERSION = '0.22';
 
 # Provider Specific Fields
 has 'meta_attribute' =>
@@ -14,19 +14,13 @@ has 'meta_attribute' =>
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'twitter' );
 
-sub create {
-    my ( $self, $card_type ) = @_;
-
-    $card_type ||= $self->card_type;
-
-    if ( $card_type eq 'summary' ) {
-        return $self->create_summary_card;
-    }
-    elsif ( $card_type eq 'featured_image' ) {
-        return $self->create_featured_image_card;
-    }
-
-    return $self->_no_card_type($card_type);
+sub card_options {
+    return (
+        summary        => 'create_summary_card',
+        featured_image => 'create_featured_image_card',
+        app            => 'create_app_card',
+        player         => 'create_player_card',
+    );
 }
 
 sub create_summary_card {
@@ -63,6 +57,18 @@ sub create_app_card {
     return $self->build_meta_tags(@fields);
 }
 
+sub create_player_card {
+    my ($self) = @_;
+
+    $self->card('player');
+
+    # the required fields needed to build a twitter featured image card
+    my @fields =
+      qw(card site title description image player player_width player_height );
+
+    return $self->build_meta_tags(@fields);
+}
+
 #
 # The End
 #
@@ -78,7 +84,7 @@ HTML::SocialMeta::Twitter
 
 =head1 VERSION
 
-Version 0.01
+Version 0.2
 
 =cut
 
@@ -86,15 +92,45 @@ Version 0.01
 
 Base class to create Twitter Cards
 
-=head1 METHODS
-
-=cut
-
 =head1 SYNOPSIS
+    
+    $twitter_meta => HTML::Social::Twitter->new(
+        card_type => 'summary',
+        site => '@example_twitter',
+        site_name => 'Example Site, anything',
+        title => 'You can have any title you wish here',
+        description => 'Description goes here may have to do a little validation',
+        image => 'www.urltoimage.com/blah.jpg',
+        url  => 'www.someurl.com',
+        app_country => 'test',
+        app_name_store => 'test',
+        app_id_store => 'test',
+        app_url_store => 'test',
+        app_name_play => 'test',
+        app_id_play => 'test',
+        app_url_play => 'test',
+        player      => 'www.urltovideo.com/blah.jpg',
+        player_width => '500',
+        player_height => '500',            
+   );
+
+   $twitter->create('summary featured_image app player');
+   
+   $twitter->create_summary_card;
+   $twitter->create_featured_image_card;
+   $twitter->create_app_card;
+   $twitter->create_player_card;
+
+=cut 
 
 =head1 SUBROUTINES/METHODS
 
 =head2 create 
+
+    * summary
+    * featured_image
+    * app
+    * player
 
 =cut
 
@@ -141,14 +177,28 @@ Required Fields
 
 =cut
 
+=head3 create_player_card
+
+Required Fields
+
+    * card 
+    * site 
+    * title 
+    * description 
+    * image 
+    * player 
+    * player_width 
+    * player_height
+
+=cut
+
 =head1 AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 
 =head1 TODO
  
-    * Improve tests
-    * Add support for more social Card Types / Meta Providers
+    * Add support for player streaming 
  
 =head1 BUGS AND LIMITATIONS
  

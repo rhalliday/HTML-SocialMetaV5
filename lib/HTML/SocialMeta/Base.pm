@@ -2,7 +2,7 @@ package HTML::SocialMeta::Base;
 use Moose;
 use namespace::autoclean;
 use Carp;
-our $VERSION = '0.1';
+our $VERSION = '0.2';
 
 # A list of fields which the cards may possibly use
 has 'card_type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
@@ -22,6 +22,23 @@ has 'app_url_store'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'app_name_play'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'app_id_play'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'app_url_play'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'player'         => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'player_height'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'player_width'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+
+sub create {
+    my ( $self, $card_type ) = @_;
+
+    $card_type ||= $self->card_type;
+
+    my %card_options = $self->card_options;
+
+    if ( my $option = $card_options{$card_type} ) {
+        return $self->$option;
+    }
+
+    return $self->_no_card_type($card_type);
+}
 
 sub build_meta_tags {
     my ( $self, @fields ) = @_;
@@ -51,10 +68,12 @@ sub _validate_field_value {
 sub _generate_meta_tag {
     my ( $self, $field ) = @_;
 
-    # just build the meta tag if this is not an app field
-    return $self->_build_field($field) if $field !~ m{^app}xms;
-
     my @tags = ();
+
+    return $self->_build_field( $field, @{ $self->_convert_field($field) } )
+      if $field =~ m{^player}xms;
+
+    return $self->_build_field($field) if $field !~ m{^app}xms;
 
     for ( @{ $self->_convert_field($field) } ) {
         push @tags, $self->_build_field( $field, $_ );
@@ -89,7 +108,7 @@ sub _convert_field {
         push @app_fields, $field . 'ipad';
 
     }
-    elsif ( $field =~ s{ play }{}xms ) {
+    elsif ( $field =~ s{ play $ }{}xms ) {
 
         push @app_fields, $field . 'googleplay';
 
@@ -101,6 +120,12 @@ sub _convert_field {
     }
 
     return \@app_fields;
+}
+
+sub _no_card_type {
+    my ( $self, $card_type ) = @_;
+    return croak
+q{this card type does not exist try one of these summary, featured_image, app, player};
 }
 
 #
@@ -126,7 +151,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.01
+Version 0.2
 
 =cut
 
