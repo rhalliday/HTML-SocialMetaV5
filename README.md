@@ -138,18 +138,18 @@ fields required:
 
 ## Featured Image Card
 
-,-----------------------------------,
-| \*-------------------------------\* |
-| |                               | |
-| |                               | |
-| |                               | |
-| |                               | |
-| |                               | |
-| |                               | |
-| \*-------------------------------\* |
-|  TITLE                            |
-|  DESCRIPTION                      |
-\*-----------------------------------\*
+        ,-----------------------------------,
+        | *-------------------------------* |
+        | |                               | |
+        | |                               | |
+        | |                               | |
+        | |                               | |
+        | |                               | |
+        | |                               | |
+        | *-------------------------------* |
+        |  TITLE                            |
+        |  DESCRIPTION                      |
+        *-----------------------------------*
 
 Returns an instance for the featured image card:
 
@@ -219,6 +219,9 @@ You just need to specify the card type on create
 # AUTHORS
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
+
+With special thanks to:
+Robert Haliday &lt;robh@cpan.org>
 
 # TODO
 

@@ -152,18 +152,18 @@ fields required:
 
 =head2 Featured Image Card
 
-,-----------------------------------,
-| *-------------------------------* |
-| |                               | |
-| |                               | |
-| |                               | |
-| |                               | |
-| |                               | |
-| |                               | |
-| *-------------------------------* |
-|  TITLE                            |
-|  DESCRIPTION                      |
-*-----------------------------------*
+	,-----------------------------------,
+	| *-------------------------------* |
+	| |                               | |
+	| |                               | |
+	| |                               | |
+	| |                               | |
+	| |                               | |
+	| |                               | |
+	| *-------------------------------* |
+	|  TITLE                            |
+	|  DESCRIPTION                      |
+	*-----------------------------------*
 
 Returns an instance for the featured image card:
 
@@ -325,6 +325,9 @@ __PACKAGE__->meta->make_immutable;
 =head1 AUTHORS
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
+
+With special thanks to:
+Robert Haliday <robh@cpan.org>
 
 =head1 TODO
  
