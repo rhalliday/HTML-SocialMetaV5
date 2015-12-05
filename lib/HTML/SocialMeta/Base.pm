@@ -34,6 +34,7 @@ sub create {
     my %card_options = $self->card_options;
 
     if ( my $option = $card_options{$card_type} ) {
+
         return $self->$option;
     }
 
@@ -70,8 +71,12 @@ sub _generate_meta_tag {
 
     my @tags = ();
 
-    return $self->_build_field( $field, @{ $self->_convert_field($field) } )
-      if $field =~ m{^player}xms;
+    if ( $field =~ m{^player}xms ) {
+        for ( @{ $self->_convert_field($field) } ) {
+            push @tags, $self->_build_field( $field, $_ );
+        }
+        return @tags;
+    }
 
     return $self->_build_field($field) if $field !~ m{^app}xms;
 
@@ -113,8 +118,22 @@ sub _convert_field {
         push @app_fields, $field . 'googleplay';
 
     }
-    else {
+    elsif ( $self->meta_namespace eq q{og} && $field =~ s{^player}{video}xms ) {
 
+        if ( $field =~ m{^video$}xms ) {
+
+            push @app_fields, $field . ':url';
+            push @app_fields, $field . ':secure_url';
+
+        }
+        else {
+
+            push @app_fields, $field;
+
+        }
+
+    }
+    else {
         push @app_fields, $field;
 
     }
@@ -125,7 +144,7 @@ sub _convert_field {
 sub _no_card_type {
     my ( $self, $card_type ) = @_;
     return croak
-        q{this card type does not exist try one of these summary, featured_image, app, player};
+q{this card type does not exist try one of these summary, featured_image, app, player};
 }
 
 #

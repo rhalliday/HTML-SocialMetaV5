@@ -17,6 +17,7 @@ sub card_options {
     return (
         summary        => 'create_thumbnail_card',
         featured_image => 'create_article_card',
+        player         => 'create_video_card',
     );
 }
 
@@ -38,6 +39,17 @@ sub create_article_card {
 
     # the required fields needed to build a twitter featured image card
     my @fields = qw(type title description url image site_name);
+
+    return $self->build_meta_tags(@fields);
+}
+
+sub create_video_card {
+    my ($self) = @_;
+
+    $self->type('video');
+
+    my @fields =
+      qw(type site_name url title image description player player_width player_height);
 
     return $self->build_meta_tags(@fields);
 }

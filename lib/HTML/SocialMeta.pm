@@ -56,7 +56,8 @@ sub create {
 
     $self->card_type($card_type);
 
-    my @meta_tags = map { $self->$_->create() } qw/schema twitter opengraph/;
+    my @meta_tags = map { $self->$_->create( $self->card_type ) }
+      qw/schema twitter opengraph/;
 
     return join "\n", @meta_tags;
 }
@@ -89,12 +90,15 @@ sub _build_opengraph {
     my $self = shift;
 
     return HTML::SocialMeta::OpenGraph->new(
-        card_type   => $self->card_type,
-        site_name   => $self->site_name,
-        title       => $self->title,
-        description => $self->description,
-        image       => $self->image,
-        url         => $self->url,
+        card_type     => $self->card_type,
+        site_name     => $self->site_name,
+        title         => $self->title,
+        description   => $self->description,
+        image         => $self->image,
+        url           => $self->url,
+        player        => $self->player,
+        player_width  => $self->player_width,
+        player_height => $self->player_height,
     );
 }
 
@@ -335,11 +339,23 @@ price and app info pulled from the app stores?
 
 =head2 Player Card
 
-*Currently only supporting the Player card for twitter
+Returns an instance for the player card:
+
+	card => 'player' 
+
+or
+	
+	$card->create('player');	
+
+or
+
+	my $twitter_player_card = $social->twitter->create_player_card;
+	my $opengraph_video_card = $meta_tags->opengraph->create_video_card;
+
 
 	,-----------------------------------,
-	| Title								|	
-	| link								|
+	| Title	                            |	
+	| link				    |
 	| *-------------------------------* |
 	| |                               | |
 	| |                               | |

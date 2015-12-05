@@ -208,11 +208,23 @@ price and app info pulled from the app stores?
 
 ## Player Card
 
-\*Currently only supporting the Player card for twitter
+Returns an instance for the player card:
+
+        card => 'player' 
+
+or
+
+        $card->create('player');        
+
+or
+
+        my $twitter_player_card = $social->twitter->create_player_card;
+        my $opengraph_video_card = $meta_tags->opengraph->create_video_card;
+
 
         ,-----------------------------------,
-        | Title                                                         |       
-        | link                                                          |
+        | Title                             |   
+        | link                              |
         | *-------------------------------* |
         | |                               | |
         | |                               | |
@@ -253,6 +265,7 @@ Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 # TODO
 
        * Add support for more social Card Types / Meta Providers
+       * Additiona Meta Tag Support
     
 
 # BUGS AND LIMITATIONS
