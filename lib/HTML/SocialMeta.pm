@@ -181,7 +181,7 @@ This module currently only following card types:
 
 =head1 SYNOPSIS
 
-    use HTML::SocialMeta;
+        use HTML::SocialMeta;
 	# summary or featured image 
 	my $social = HTML::SocialCards->new(
 		site => '',
@@ -339,20 +339,6 @@ price and app info pulled from the app stores?
 
 =head2 Player Card
 
-Returns an instance for the player card:
-
-	card => 'player' 
-
-or
-	
-	$card->create('player');	
-
-or
-
-	my $twitter_player_card = $social->twitter->create_player_card;
-	my $opengraph_video_card = $meta_tags->opengraph->create_video_card;
-
-
 	,-----------------------------------,
 	| Title	                            |	
 	| link				    |
@@ -366,15 +352,28 @@ or
 	| *-------------------------------* |
 	*-----------------------------------*
 
+Returns an instance for the player card:
+
+	card => 'player' 
+
+or
+	
+	$card->create('player');	
+
+or
+
+	my $twitter_player_card = $social->twitter->create_player_card;
+	my $opengraph_video_card = $meta_tags->opengraph->create_video_card;
+
 Fields Required:
  
-    * site 
-    * title 
-    * description 
-    * image 
-    * player 
-    * player_width 
-    * player_height
+        * site 
+        * title 
+        * description 
+        * image 
+        * player 
+        * player_width 
+        * player_height
 
 =head2 create
 
