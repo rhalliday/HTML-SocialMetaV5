@@ -41,10 +41,10 @@ my $meta_player_tags = HTML::SocialMeta->new(
 ok($meta_tags);
 my $twitter = $meta_tags->twitter;
 # Create Twitter Cards
-my $twitter_summary_card = $meta_tags->twitter->create_summary_card;
-my $twitter_featured_image_card = $meta_tags->twitter->create_featured_image_card;
-my $twitter_app_card = $meta_tags->twitter->create_app_card;
-my $twitter_player_card = $meta_player_tags->twitter->create_player_card;
+my $twitter_summary_card = $meta_tags->twitter->create_summary;
+my $twitter_featured_image_card = $meta_tags->twitter->create_summary_large_image;
+my $twitter_app_card = $meta_tags->twitter->create_app;
+my $twitter_player_card = $meta_player_tags->twitter->create_player;
 
 # Meta tags we need for Twitter to work
 my $test_twitter = '<meta name="twitter:card" content="summary"/>

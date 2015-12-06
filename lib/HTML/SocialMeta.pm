@@ -32,21 +32,21 @@ has 'twitter' => (
     isa     => 'HTML::SocialMeta::Twitter',
     is      => 'ro',
     lazy    => 1,
-    builder => '_build_twitter',
+    builder => 'build_twitter',
 );
 
 has 'opengraph' => (
     isa     => 'HTML::SocialMeta::OpenGraph',
     is      => 'ro',
     lazy    => 1,
-    builder => '_build_opengraph',
+    builder => 'build_opengraph',
 );
 
 has 'schema' => (
     isa        => 'HTML::SocialMeta::Schema',
     is         => 'ro',
     lazy_build => 1,
-    builder    => '_build_schema',
+    builder    => 'build_schema',
 );
 
 sub create {
@@ -62,7 +62,19 @@ sub create {
     return join "\n", @meta_tags;
 }
 
-sub _build_twitter {
+sub required_fields {
+    my ( $self, $card_type ) = @_;
+
+    my @meta_tags =
+      map { $self->$_->required_fields( $self->$_->meta_option($card_type) ) }
+      qw/schema twitter opengraph/;
+
+    my @required_fields = _remove_dupes(@meta_tags);
+
+    return @required_fields;
+}
+
+sub build_twitter {
     my $self = shift;
 
     return HTML::SocialMeta::Twitter->new(
@@ -86,7 +98,7 @@ sub _build_twitter {
     );
 }
 
-sub _build_opengraph {
+sub build_opengraph {
     my $self = shift;
 
     return HTML::SocialMeta::OpenGraph->new(
@@ -102,7 +114,7 @@ sub _build_opengraph {
     );
 }
 
-sub _build_schema {
+sub build_schema {
     my $self = shift;
 
     return HTML::SocialMeta::Schema->new(
@@ -110,6 +122,11 @@ sub _build_schema {
         description => $self->description,
         image       => $self->image,
     );
+}
+
+sub _remove_dupes {
+    my %seen;
+    return grep !$seen{$_}++, @_;
 }
 
 #
@@ -388,6 +405,18 @@ You just need to specify the card type on create
 	$social->create('summary | featured_image | app | player');
 
 =cut
+
+=head2 required_fields
+
+Returns an array of fields that are required to build the cards
+
+	$social = HTML->SocialMeta->new();
+	# @fields = qw{}
+	my @fields = $social->required_fields('summary');
+
+=cut
+
+
 
 =head1 AUTHOR
 

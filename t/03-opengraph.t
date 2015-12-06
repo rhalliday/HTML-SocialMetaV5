@@ -23,9 +23,9 @@ my $meta_tags = HTML::SocialMeta->new(
 ok($meta_tags);
 
 my $opengraph_tags = $meta_tags->opengraph;
-my $opengraph_article_card = $meta_tags->opengraph->create_article_card;
-my $opengraph_thumbnail_card = $meta_tags->opengraph->create_thumbnail_card;
-my $opengraph_viedo_card = $meta_tags->opengraph->create_video_card;
+my $opengraph_article_card = $meta_tags->opengraph->create_article;
+my $opengraph_thumbnail_card = $meta_tags->opengraph->create_thumbnail;
+my $opengraph_viedo_card = $meta_tags->opengraph->create_video;
 
 # Meta tags we need for OPENGRAPH to work
 my $test_opengraph = '<meta property="og:type" content="article"/>

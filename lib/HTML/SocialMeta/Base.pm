@@ -42,10 +42,10 @@ sub create {
 }
 
 sub build_meta_tags {
-    my ( $self, @fields ) = @_;
+    my ( $self, $field ) = @_;
 
     my @meta_tags;
-    foreach my $field (@fields) {
+    foreach my $field ( $self->required_fields($field) ) {
 
         # check the field has a value set
         $self->_validate_field_value($field);
@@ -54,6 +54,17 @@ sub build_meta_tags {
     }
 
     return join "\n", @meta_tags;
+}
+
+sub required_fields {
+    my ( $self, $field ) = @_;
+
+    my %required_fields = $self->build_fields;
+
+    if ( my @options = @{ $required_fields{$field} } ) {
+
+        return @options;
+    }
 }
 
 sub _validate_field_value {
@@ -141,6 +152,20 @@ sub _convert_field {
     return \@app_fields;
 }
 
+sub meta_option {
+    my ( $self, $card_type ) = @_;
+
+    # get the current providers card options
+    my %cards = $self->card_options;
+
+    if ( my $option = $cards{$card_type} ) {
+
+        # remove create_ and we have the card type
+        $option =~ s{^create_}{}xms;
+        return $option;
+    }
+}
+
 sub _no_card_type {
     my ( $self, $card_type ) = @_;
     return croak
@@ -185,6 +210,12 @@ This builds the meta tags for Twitter and OpenGraph
 It takes an array of fields, which loops through firstly checking 
 that we have a value set and then actually building the specific tag
 for that field.
+
+=cut
+
+=head2 required_fields
+
+returns an array of the fields that are required to build a specific card
 
 =cut
 

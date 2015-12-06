@@ -257,6 +257,14 @@ You just need to specify the card type on create
 
         $social->create('summary | featured_image | app | player');
 
+## required\_fields
+
+Returns an array of fields that are required to build the cards
+
+        $social = HTML->SocialMeta->new();
+        # @fields = qw{}
+        my @fields = $social->required_fields('summary');
+
 # AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>

@@ -19,8 +19,25 @@ my $bad_meta_tags = HTML::SocialMeta->new(
 );
 
 # it will run schema first so it won't have a name!! which is equivelant to title
-throws_ok{$bad_meta_tags->twitter->create_summary_card} qr/you have not set this field value title/;
-throws_ok{$bad_meta_tags->opengraph->create_article_card} qr/you have not set this field value title/;
+throws_ok{$bad_meta_tags->twitter->create_summary} qr/you have not set this field value title/;
+throws_ok{$bad_meta_tags->opengraph->create_article} qr/you have not set this field value title/;
+
+use Data::Dumper;
+my $social =HTML::SocialMeta->new();
+my @social_required_fields = $social->required_fields('summary');
+
+my @expected_fields = ( qw{name description image card site title type url site_name} );
+my @expected_player_fields = ( qw{name description image card site title player player_width player_height type site_name url} );
+
+is(@social_required_fields, @expected_fields);
+
+my @social_featured_fields  = $social->required_fields('featured_image');
+
+is(@social_featured_fields, @expected_fields);
+
+my @social_player_fields = $social->required_fields('player');
+
+is(@social_player_fields, @expected_player_fields);
 
 done_testing;
 

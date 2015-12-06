@@ -16,57 +16,56 @@ has 'meta_namespace' =>
 
 sub card_options {
     return (
-        summary        => 'create_summary_card',
-        featured_image => 'create_featured_image_card',
-        app            => 'create_app_card',
-        player         => 'create_player_card',
+        summary        => q(create_summary),
+        featured_image => q(create_summary_large_image),
+        app            => q(create_app),
+        player         => q(create_player),
     );
 }
 
-sub create_summary_card {
+sub build_fields {
+    return (
+        summary             => [qw(card site title description image)],
+        summary_large_image => [qw(card site title description image)],
+        app                 => [
+            qw(card site description app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play)
+        ],
+        player => [
+            qw(card site title description image player player_width player_height)
+        ],
+    );
+}
+
+sub create_summary {
     my ($self) = @_;
 
     $self->card('summary');
 
-    # the required fields needed to build a twitter summary card
-    my @fields = qw(card site title description image);
-
-    return $self->build_meta_tags(@fields);
+    return $self->build_meta_tags( $self->card );
 }
 
-sub create_featured_image_card {
+sub create_summary_large_image {
     my ($self) = @_;
 
     $self->card('summary_large_image');
 
-    # the required fields needed to build a twitter featured image card
-    my @fields = qw(card site title description image);
-
-    return $self->build_meta_tags(@fields);
+    return $self->build_meta_tags( $self->card );
 }
 
-sub create_app_card {
+sub create_app {
     my ($self) = @_;
 
     $self->card('app');
 
-    # the required fields needed to build a twitter featured image card
-    my @fields =
-      qw(card site description app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play);
-
-    return $self->build_meta_tags(@fields);
+    return $self->build_meta_tags( $self->card );
 }
 
-sub create_player_card {
+sub create_player {
     my ($self) = @_;
 
     $self->card('player');
 
-    # the required fields needed to build a twitter featured image card
-    my @fields =
-      qw(card site title description image player player_width player_height );
-
-    return $self->build_meta_tags(@fields);
+    return $self->build_meta_tags( $self->card );
 }
 
 #

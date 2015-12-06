@@ -13,17 +13,23 @@ has 'meta_attribute' =>
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => q{} );
 
-override create => sub {
-    my ($self) = @_;
+sub card_options {
+    return (
+        summary        => q(create_schema),
+        featured_image => q(create_schema),
+        player         => q(create_schema),
+    );
+}
 
-    return $self->create_card;
-};
+sub build_fields {
+    return ( schema => [qw(name description image)], );
+}
 
-sub create_card {
+sub create_schema {
     my ($self) = @_;
 
     # the required fields needed to build a twitter summary card
-    my @fields = qw(name description image);
+    my @fields = $self->required_fields('schema');
 
     return $self->build_meta_tags(@fields);
 }
@@ -136,7 +142,8 @@ Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 =head1 TODO
  
     * Improve tests
-    * Add support for more social Card Types / Meta Providers
+    * Add Additional Support for schema.org
+    * Figure out which meta tags are used
  
 =head1 BUGS AND LIMITATIONS
  

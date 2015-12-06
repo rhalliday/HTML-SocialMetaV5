@@ -17,7 +17,7 @@ my $meta_tags = HTML::SocialMeta->new(
 ok($meta_tags);
 
 # Create Schema Cards
-my $schema_tags = $meta_tags->schema->create_card;
+my $schema_tags = $meta_tags->schema->create_schema;
 
 # Meta tags we need for Schema to work
 my $test_schema = '<html itemscope itemtype="http://schema.org/Article">
