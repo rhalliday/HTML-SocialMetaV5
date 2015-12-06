@@ -11,25 +11,43 @@ extends 'HTML::SocialMeta::Base';
 has 'meta_attribute' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'itemprop' );
 has 'meta_namespace' =>
-  ( isa => 'Str', is => 'ro', required => 1, default => q{} );
+  ( isa => 'Str', is => 'ro', required => 1, default => 'content' );
+has 'item_type' => ( isa => 'Str', is => 'rw', required => 1, default => q{} );
 
 sub card_options {
     return (
-        summary        => q(create_schema),
-        featured_image => q(create_schema),
-        player         => q(create_schema),
+        summary        => q(create_article),
+        featured_image => q(create_article),
+        player         => q(create_video),
     );
 }
 
 sub build_fields {
-    return ( schema => [qw(name description image)], );
+    return (
+        article => [qw(name description image)],
+        video => [qw(name description image player player_width player_height)]
+    );
 }
 
-sub create_schema {
+sub create_article {
     my ($self) = @_;
 
     # the required fields needed to build a twitter summary card
-    my @fields = $self->required_fields('schema');
+    my @fields = $self->required_fields('article');
+    $self->item_type(
+'<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />'
+    );
+
+    return $self->build_meta_tags(@fields);
+}
+
+sub create_video {
+    my ($self) = @_;
+
+    my @fields = $self->required_fields('video');
+    $self->item_type(
+'<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject">'
+    );
 
     return $self->build_meta_tags(@fields);
 }
@@ -40,7 +58,7 @@ override build_meta_tags => sub {
     my @meta_tags;
 
     # specifiying this is an Google Article - eventually this will be modified
-    push @meta_tags, '<html itemscope itemtype="http://schema.org/Article">';
+    push @meta_tags, $self->item_type;
 
     # google snippet
     push @meta_tags, '<title>' . $self->name . '</title>';
@@ -51,11 +69,36 @@ override build_meta_tags => sub {
 
         # check the field has a value set
         $self->_validate_field_value($field);
+        if ( $field =~ m{^player}xms ) {
+            for ( @{ $self->_convert_field($field) } ) {
+                push @meta_tags, $self->_build_field( $field, $_ );
+            }
+        }
+        else {
+            push @meta_tags, $self->_build_field($field);
+        }
+    }
 
-        push @meta_tags, $self->_build_field($field);
+    if ( $self->image && @fields == $self->required_fields('video') ) {
+        push @meta_tags, $self->_build_field( q(image), q(thumbnailUrl) );
     }
 
     return join "\n", @meta_tags;
+};
+
+override _convert_field => sub {
+    my ( $self, $field ) = @_;
+
+    my @app_fields;
+
+    if ( $field =~ s{player_}{}xms ) {
+        push @app_fields, $field;
+    }
+    else {
+        push @app_fields, qw(embedURL contentURL);
+    }
+
+    return \@app_fields;
 };
 
 override _build_field => sub {
@@ -66,7 +109,7 @@ override _build_field => sub {
     return
         q{<meta }
       . $self->meta_attribute . q{="}
-      . $field
+      . $field_type
       . q{" content="}
       . $self->$field . q{"/>};
 };

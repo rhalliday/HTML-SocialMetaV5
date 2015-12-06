@@ -118,9 +118,12 @@ sub build_schema {
     my $self = shift;
 
     return HTML::SocialMeta::Schema->new(
-        name        => $self->title,
-        description => $self->description,
-        image       => $self->image,
+        name          => $self->title,
+        description   => $self->description,
+        image         => $self->image,
+        player        => $self->player,
+        player_width  => $self->player_width,
+        player_height => $self->player_height,
     );
 }
 
