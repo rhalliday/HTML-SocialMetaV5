@@ -92,13 +92,15 @@ sub build_twitter {
 sub build_opengraph {
     my $self = shift;
 
+    my $url = $self->app_url_store ? $self->app_url_store : $self->url; 
+
     return HTML::SocialMeta::OpenGraph->new(
         card_type     => $self->card_type,
         site_name     => $self->site_name,
         title         => $self->title,
         description   => $self->description,
         image         => $self->image,
-        url           => $self->url,
+        url           => $url,
         player        => $self->player,
         player_width  => $self->player_width,
         player_height => $self->player_height,
@@ -109,6 +111,7 @@ sub build_schema {
     my $self = shift;
 
     return HTML::SocialMeta::Schema->new(
+    	title         => $self->title,
         name          => $self->title,
         description   => $self->description,
         image         => $self->image,

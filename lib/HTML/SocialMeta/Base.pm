@@ -5,12 +5,17 @@ use Carp;
 our $VERSION = '0.2';
 
 # A list of fields which the cards may possibly use
-has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
-has 'card'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
-has 'type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
-has 'name'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
-    qw(site_name title description image url creator app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play player player_height player_width)
+    qw(card_type card type name url)
+  ] => ( 
+    isa => 'Str', 
+    is => 'rw', 
+    lazy => 1, 
+    default => q{}, 
+  );
+
+has [
+    qw(site site_name title description image creator app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play player player_height player_width)
   ] => (
     is      => 'ro',
     isa     => 'Str',
@@ -18,22 +23,6 @@ has [
     default => q{},
   );
 
-has 'site'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'url'            => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'site_name'      => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'title'          => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'description'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'image'          => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_country'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_name_store' => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_id_store'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_url_store'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_name_play'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_id_play'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_url_play'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'player'         => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'player_height'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'player_width'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 
 sub create {
     my ( $self, $card_type ) = @_;
@@ -54,8 +43,11 @@ sub build_meta_tags {
     my ( $self, $field ) = @_;
 
     my @meta_tags;
-    foreach my $field ( $self->required_fields($field) ) {
 
+    push @meta_tags, $self->item_type
+        if $self->meta_attribute eq q{itemprop};
+
+    foreach my $field ( $self->required_fields($field) ) {
         # check the field has a value set
         $self->_validate_field_value($field);
 
@@ -126,39 +118,7 @@ sub _convert_field {
 
     $field =~ tr/_/:/;
 
-    my @app_fields;
-    if ( $field =~ s{store}{}xms ) {
-
-        push @app_fields, $field . 'iphone';
-        push @app_fields, $field . 'ipad';
-
-    }
-    elsif ( $field =~ s{ play $ }{}xms ) {
-
-        push @app_fields, $field . 'googleplay';
-
-    }
-    elsif ( $self->meta_namespace eq q{og} && $field =~ s{^player}{video}xms ) {
-
-        if ( $field =~ m{^video$}xms ) {
-
-            push @app_fields, $field . ':url';
-            push @app_fields, $field . ':secure_url';
-
-        }
-        else {
-
-            push @app_fields, $field;
-
-        }
-
-    }
-    else {
-        push @app_fields, $field;
-
-    }
-
-    return \@app_fields;
+    return $self->_provider_convert($field);
 }
 
 sub meta_option {

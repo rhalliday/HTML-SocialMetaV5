@@ -33,73 +33,35 @@ sub build_fields {
 sub create_article {
     my ($self) = @_;
 
-    # the required fields needed to build a twitter summary card
-    my @fields = $self->required_fields('article');
-
     $self->item_type(
-'<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />'
+        q{<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />}
     );
 
-    return $self->build_meta_tags(@fields);
+    return $self->build_meta_tags( 'article' );
 }
 
 sub create_offer {
     my ($self) = @_;
 
-    my @fields = $self->required_fields('offer');
-
     $self->item_type(
-        '<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />'
+        q{<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />}
     );
 
-    return $self->build_meta_tags(@fields);
+    return $self->build_meta_tags( 'offer' );
 }
 
 sub create_video {
     my ($self) = @_;
 
-    my @fields = $self->required_fields('video');
-
     $self->item_type(
-'<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />'
-    );
+        q{<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />} 
+        . "\n" .
+        q{<meta itemprop="thumbnailUrl" content="} . $self->image . q{"/>}
+     );
 
-    return $self->build_meta_tags(@fields);
+    return $self->build_meta_tags( 'video' );
 }
 
-override build_meta_tags => sub {
-    my ( $self, @fields ) = @_;
-
-    my @meta_tags;
-
-    # specifiying this is an Google Article - eventually this will be modified
-    push @meta_tags, $self->item_type;
-
-    # google snippet
-    push @meta_tags, '<title>' . $self->name . '</title>';
-    push @meta_tags,
-      '<meta name="description" content="' . $self->description . '">';
-
-    foreach my $field (@fields) {
-
-        # check the field has a value set
-        $self->_validate_field_value($field);
-        if ( $field =~ m{^player}xms ) {
-            for ( @{ $self->_convert_field($field) } ) {
-                push @meta_tags, $self->_build_field( $field, $_ );
-            }
-        }
-        else {
-            push @meta_tags, $self->_build_field($field);
-        }
-    }
-
-    if ( $self->image && @fields == $self->required_fields('video') ) {
-        push @meta_tags, $self->_build_field( q(image), q(thumbnailUrl) );
-    }
-
-    return join "\n", @meta_tags;
-};
 
 override _convert_field => sub {
     my ( $self, $field ) = @_;

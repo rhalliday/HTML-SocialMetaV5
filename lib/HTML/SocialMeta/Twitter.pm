@@ -68,6 +68,32 @@ sub create_player {
     return $self->build_meta_tags( $self->card );
 }
 
+
+sub _provider_convert {
+    my ( $self, $field ) = @_;
+
+    $field =~ tr/_/:/;
+
+    my @app_fields;
+    if ( $field =~ s{store}{}xms ) {
+
+        push @app_fields, $field . 'iphone';
+        push @app_fields, $field . 'ipad';
+
+    }
+    elsif ( $field =~ s{ play $ }{}xms ) {
+
+        push @app_fields, $field . 'googleplay';
+
+    }
+    else {
+        push @app_fields, $field;
+
+    }
+
+    return \@app_fields;
+}
+
 #
 # The End
 #

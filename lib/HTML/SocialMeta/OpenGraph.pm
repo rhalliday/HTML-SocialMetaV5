@@ -18,6 +18,7 @@ sub card_options {
         summary        => q(create_thumbnail),
         featured_image => q(create_article),
         player         => q(create_video),
+        app            => q(create_product),
     );
 }
 
@@ -28,6 +29,7 @@ sub build_fields {
         video     => [
             qw(type site_name url title image description player player_width player_height)
         ],
+        product   => [qw(type title image description url)]
     );
 }
 
@@ -54,6 +56,40 @@ sub create_video {
 
     return $self->build_meta_tags( $self->type );
 }
+
+sub create_product {
+    my ($self) = @_;
+
+    $self->type('product');
+
+    return $self->build_meta_tags( $self->type );
+}
+
+sub _provider_convert {
+    my ( $self, $field ) = @_;
+
+    $field =~ tr/_/:/;
+
+    my @app_fields;
+    
+    if ( $field =~ s{^player}{video}xms ) {
+
+        if ( $field =~ m{^video$}xms ) {
+
+            push @app_fields, $field . ':url';
+            push @app_fields, $field . ':secure_url';
+
+        }
+        else {
+
+            push @app_fields, $field;
+
+        }
+    }
+
+    return \@app_fields;
+}
+
 
 #
 # The End
