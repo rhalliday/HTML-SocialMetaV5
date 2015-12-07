@@ -8,7 +8,7 @@ Version 0.2
 
 # DESCRIPTION
 
-This module makes it easy to create social meta cards.
+This module makes it easy to generate social meta data.
 
 i.e  $social->create('summary') will generate:
 
