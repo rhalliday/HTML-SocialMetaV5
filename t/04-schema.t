@@ -21,6 +21,7 @@ ok($meta_tags);
 
 # Create Schema Cards
 my $schema_tags = $meta_tags->schema->create_article;
+my $offer_tags = $meta_tags->schema->create_offer;
 my $video_tags = $meta_tags->schema->create_video;
 
 # Meta tags we need for Schema to work
@@ -33,7 +34,16 @@ my $test_schema = '<meta itemprop="article" itemscope itemtype="http://schema.or
 
 is($schema_tags, $test_schema);
 
-my $test_video = '<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject">
+my $test_offer = '<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />
+<title>You can have any title you wish here</title>
+<meta name="description" content="Description goes here may have to do a little validation">
+<meta itemprop="name" content="You can have any title you wish here"/>
+<meta itemprop="description" content="Description goes here may have to do a little validation"/>
+<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>';
+
+is($offer_tags, $test_offer);
+
+my $test_video = '<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />
 <title>You can have any title you wish here</title>
 <meta name="description" content="Description goes here may have to do a little validation">
 <meta itemprop="name" content="You can have any title you wish here"/>

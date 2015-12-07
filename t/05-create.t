@@ -66,7 +66,7 @@ is($generic_twitter_create, $test_twitter);
 
 my $create_featured = $meta_tags->create('featured_image');
 
-my $test_featured_all = '<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />
+my $test_featured_all = '<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />
 <title>You can have any title you wish here</title>
 <meta name="description" content="Description goes here may have to do a little validation">
 <meta itemprop="name" content="You can have any title you wish here"/>
@@ -88,7 +88,7 @@ is($create_featured, $test_featured_all);
 
 my $create_player = $meta_tags->create('player');
 
-my $test_player_card = '<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject">
+my $test_player_card = '<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />
 <title>You can have any title you wish here</title>
 <meta name="description" content="Description goes here may have to do a little validation">
 <meta itemprop="name" content="You can have any title you wish here"/>

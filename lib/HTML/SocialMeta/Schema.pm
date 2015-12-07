@@ -17,7 +17,7 @@ has 'item_type' => ( isa => 'Str', is => 'rw', required => 1, default => q{} );
 sub card_options {
     return (
         summary        => q(create_article),
-        featured_image => q(create_article),
+        featured_image => q(create_offer),
         player         => q(create_video),
     );
 }
@@ -25,6 +25,7 @@ sub card_options {
 sub build_fields {
     return (
         article => [qw(name description image)],
+        offer   => [qw(name description image)],
         video => [qw(name description image player player_width player_height)]
     );
 }
@@ -34,8 +35,21 @@ sub create_article {
 
     # the required fields needed to build a twitter summary card
     my @fields = $self->required_fields('article');
+
     $self->item_type(
 '<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />'
+    );
+
+    return $self->build_meta_tags(@fields);
+}
+
+sub create_offer {
+    my ($self) = @_;
+
+    my @fields = $self->required_fields('offer');
+
+    $self->item_type(
+        '<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />'
     );
 
     return $self->build_meta_tags(@fields);
@@ -45,8 +59,9 @@ sub create_video {
     my ($self) = @_;
 
     my @fields = $self->required_fields('video');
+
     $self->item_type(
-'<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject">'
+'<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />'
     );
 
     return $self->build_meta_tags(@fields);

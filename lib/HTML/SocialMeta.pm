@@ -414,7 +414,7 @@ Returns an array of fields that are required to build the cards
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 
-With Special Thanks to:
+With special thanks to:
 Robert Haliday <robh@cpan.org>
 
 =head1 TODO
@@ -429,6 +429,10 @@ Please report any bugs at http://rt.cpan.org/.
 =head1 INCOMPATIBILITIES
 
 =head1 DEPENDENCIES
+
+Moose - Version 2.0604
+Namespace::Autoclean - Verstion 0.15
+List::MoreUtils - Version 0.413 
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
