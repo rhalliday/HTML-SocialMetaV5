@@ -252,7 +252,9 @@ Please report any bugs at http://rt.cpan.org/.
 # DEPENDENCIES
 
 Moose - Version 2.0604
+
 Namespace::Autoclean - Verstion 0.15
+
 List::MoreUtils - Version 0.413 
 
 # DIAGNOSTICS
@@ -284,6 +286,7 @@ meta data Google is able to extract from each page.
 # AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
+
 Robert Haliday &lt;robh@cpan.org>
 
 # CONFIGURATION AND ENVIRONMENT
