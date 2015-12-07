@@ -20,7 +20,8 @@ WriteMakefile(
     },
     PREREQ_PM => {
         'Moose' => 2.0604,
-        'namespace::autoclean' => 0.15
+        'namespace::autoclean' => 0.15,
+    	'List::MoreUtils' => 0.413
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'HTML-SocialMeta-*' },

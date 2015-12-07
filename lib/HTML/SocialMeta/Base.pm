@@ -5,21 +5,18 @@ use Carp;
 our $VERSION = '0.2';
 
 # A list of fields which the cards may possibly use
-has 'card_type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
-has 'card'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
-has 'type'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
-has 'name'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'card'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'name'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
     qw(site_name title description image url creator app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play player player_height player_width)
   ] => (
     is      => 'ro',
     isa     => 'Str',
     lazy    => 1,
-    default => q{}
+    default => q{},
   );
-
-
-
 
 has 'site'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'url'            => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
@@ -250,6 +247,10 @@ Most probably. Please report any bugs at http://rt.cpan.org/.
 =head1 INCOMPATIBILITIES
 
 =head1 DEPENDENCIES
+
+Moose - Version 2.0604
+Namespace::Autoclean - Verstion 0.15
+List::MoreUtils - Version 0.413 
 
 =head1 CONFIGURATION AND ENVIRONMENT
 

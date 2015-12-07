@@ -1,6 +1,7 @@
 package HTML::SocialMeta;
 use Moose;
 use namespace::autoclean;
+use List::MoreUtils qw(uniq);
 
 use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
@@ -15,7 +16,7 @@ has [
     is      => 'ro',
     isa     => 'Str',
     lazy    => 1,
-    default => q{}
+    default => q{},
   );
 
 has 'twitter' => (
@@ -59,7 +60,7 @@ sub required_fields {
       map { $self->$_->required_fields( $self->$_->meta_option($card_type) ) }
       qw/schema twitter opengraph/;
 
-    my @required_fields = _remove_dupes(@meta_tags);
+    my @required_fields = uniq(@meta_tags);
 
     return @required_fields;
 }
@@ -115,11 +116,6 @@ sub build_schema {
         player_width  => $self->player_width,
         player_height => $self->player_height,
     );
-}
-
-sub _remove_dupes {
-    my %seen;
-    return grep !$seen{$_}++, @_;
 }
 
 #
@@ -321,7 +317,7 @@ Fields Required:
 
 	,-----------------------------------,
 	| Title	                            |	
-	| link				    			|
+	| link	 			    |
 	| *-------------------------------* |
 	| |                               | |
 	| |                               | |
