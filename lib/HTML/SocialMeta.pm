@@ -8,25 +8,15 @@ use HTML::SocialMeta::Schema;
 
 our $VERSION = '0.2';
 
-has 'card_type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
-has 'card'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'site'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'site_name'      => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'title'          => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'description'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'image'          => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'url'            => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'creator'        => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_country'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_name_store' => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_id_store'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_url_store'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_name_play'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_id_play'    => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'app_url_play'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'player'         => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'player_height'  => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
-has 'player_width'   => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
+has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has [
+    qw(card site site_name title description image url creator app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play player player_height player_width)
+  ] => (
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
+    default => q{}
+  );
 
 has 'twitter' => (
     isa     => 'HTML::SocialMeta::Twitter',
@@ -201,7 +191,7 @@ This module currently only following card types:
 
 =head1 SYNOPSIS
 
-        use HTML::SocialMeta;
+    use HTML::SocialMeta;
 	# summary or featured image 
 	my $social = HTML::SocialCards->new(
 		site => '',
@@ -210,6 +200,8 @@ This module currently only following card types:
 		description => '',
 		image	=> '',
 		url  => '',  # optional
+		... => '',
+		... => '',
 	);
 
 	# returns meta tags for all providers	
@@ -220,10 +212,10 @@ This module currently only following card types:
 	my $opengraph_tags = $social->opengraph;
 	my $schema = $social->create->schema
 
-	my $twitter->create('summary' | 'featured_image');
+	my $twitter->create('summary' | 'featured_image' | 'player' | 'app');
 	
 	# Alternatively call a card directly
-	my $summary_card = $meta_tags->twitter->create_summary_card;
+	my $summary_card = $meta_tags->twitter->create_summary;
 	
 	....
 	# You then need to insert these meta tags in the head of your html, 
@@ -272,9 +264,9 @@ or
 
 or
 
-	my $twitter_summary_card = $social->twitter->create_summary_card;
-	my $opengraph_thumbnail_card = $social->opengraph->create_thumbnail_card;
-	my $schema_tags = $social->schema->create_card;
+	my $twitter_summary_card = $social->twitter->create_summary;
+	my $opengraph_thumbnail_card = $social->opengraph->create_thumbnail;
+	my $schema_tags = $social->schema->create_article;
 
 fields required:
 
@@ -310,8 +302,8 @@ or
 
 or
 
-	my $twitter_featured_image_card = $social->twitter->create_featured_image_card;
-	my $opengraph_article_card = $meta_tags->opengraph->create_article_card;
+	my $twitter_featured_image_card = $social->twitter->create_featured_image;
+	my $opengraph_article_card = $meta_tags->opengraph->create_article;
 
 Fields Required:
 
@@ -325,43 +317,11 @@ Fields Required:
 
 =cut
 
-=head2 App Card
-
-*Currently only supporting the App card for twitter
-
-	,-----------------------------------,
-	|   APP NAME              *-------* |
-	|   APP INFO              |  app  | |
-	|                         | image | |
-	|   PRICE                 *-------* |
-	|   DESCRIPTION                     |
-	*-----------------------------------*
-
-Return an instance for the provider specific app card:
-
-	my $twitter_app_card = $social->twitter->create_app_card;
-
-Fields Required
-
-	* site
-	* description
-	* app_country
-	* app_name_store
-	* app_id_store
-	* app_url_store
-	* app_id_play
-	* app_id_play
-	* app_id_play
-
-price and app info pulled from the app stores?
-
-=cut
-
 =head2 Player Card
 
 	,-----------------------------------,
 	| Title	                            |	
-	| link				    |
+	| link				    			|
 	| *-------------------------------* |
 	| |                               | |
 	| |                               | |
@@ -382,18 +342,53 @@ or
 
 or
 
-	my $twitter_player_card = $social->twitter->create_player_card;
-	my $opengraph_video_card = $meta_tags->opengraph->create_video_card;
+	my $twitter_player_card = $social->twitter->create_player;
+	my $opengraph_video_card = $meta_tags->opengraph->create_video;
+	my $schema_card = $meta_tags->schema->create_video;
 
 Fields Required:
  
-        * site 
-        * title 
-        * description 
-        * image 
-        * player 
-        * player_width 
-        * player_height
+    * site 
+    * title 
+    * description 
+    * image 
+    * player 
+    * player_width 
+    * player_height
+
+=cut
+
+=head2 App Card
+
+*Currently only supporting the App card for twitter
+
+	,-----------------------------------,
+	|   APP NAME              *-------* |
+	|   APP INFO              |  app  | |
+	|                         | image | |
+	|   PRICE                 *-------* |
+	|   DESCRIPTION                     |
+	*-----------------------------------*
+
+Return an instance for the provider specific app card:
+
+	my $twitter_app_card = $social->twitter->create_app;
+
+Fields Required
+
+	* site
+	* description
+	* app_country
+	* app_name_store
+	* app_id_store
+	* app_url_store
+	* app_id_play
+	* app_id_play
+	* app_id_play
+
+price and app info pulled from the app stores?
+
+=cut
 
 =head2 create
 
@@ -419,11 +414,12 @@ Returns an array of fields that are required to build the cards
 
 =cut
 
-
-
 =head1 AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
+
+With Special Thanks to:
+Robert Haliday <robh@cpan.org>
 
 =head1 TODO
  

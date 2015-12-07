@@ -9,6 +9,18 @@ has 'card_type'      => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has 'card'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has 'type'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has 'name'           => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has [
+    qw(site_name title description image url creator app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play player player_height player_width)
+  ] => (
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
+    default => q{}
+  );
+
+
+
+
 has 'site'           => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'url'            => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has 'site_name'      => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
