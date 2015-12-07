@@ -91,12 +91,12 @@ Returns an instance of this class. Requires `$url` as an argument;
 
         my $social = URL::Social->new(
                 card => '...',          * card type - currently either summary or featured_image
-                site => '',                     * twitter site - @twitter_handle 
+                site => '',             * twitter site - @twitter_handle 
                 site_name => '',        * sites name - Example Business
                 title => '',            * card title - title of the card 
                 description => '',      * description - content of the card
                 image => '',            * attached image - url http/www.someurl.com/test.jpg
-                url => '',                      * url where the content is hosted, or url to some completly randon html page
+                url => '',              * url where the content is hosted, or url to some completly randon html page
                 ... => '',
                 ... => '',
         );
