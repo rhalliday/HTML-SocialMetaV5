@@ -167,6 +167,7 @@ or
 
         my $twitter_featured_image_card = $social->twitter->create_featured_image;
         my $opengraph_article_card = $meta_tags->opengraph->create_article;
+        my $schema_offer_card = $meta_tags->schema->create_offer;
 
 Fields Required:
 
