@@ -34,34 +34,34 @@ sub create_article {
     my ($self) = @_;
 
     $self->item_type(
-        q{<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />}
+q{<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />}
     );
 
-    return $self->build_meta_tags( 'article' );
+    return $self->build_meta_tags('article');
 }
 
 sub create_offer {
     my ($self) = @_;
 
     $self->item_type(
-        q{<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />}
+q{<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />}
     );
 
-    return $self->build_meta_tags( 'offer' );
+    return $self->build_meta_tags('offer');
 }
 
 sub create_video {
     my ($self) = @_;
 
     $self->item_type(
-        q{<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />} 
-        . "\n" .
-        q{<meta itemprop="thumbnailUrl" content="} . $self->image . q{"/>}
-     );
+q{<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />}
+          . "\n"
+          . q{<meta itemprop="thumbnailUrl" content="}
+          . $self->image
+          . q{"/>} );
 
-    return $self->build_meta_tags( 'video' );
+    return $self->build_meta_tags('video');
 }
-
 
 override _convert_field => sub {
     my ( $self, $field ) = @_;
@@ -114,44 +114,57 @@ Version 0.2
 
 Base class for creating Schema meta data
 
-=head1 METHODS
-
-=cut
-
 =head1 SYNOPSIS
+
+   $schema_meta => HTML::Social::schema->new(
+        card_type => 'summary',
+        site => '@example_twitter',
+        site_name => 'Example Site, anything',
+        title => 'You can have any title you wish here',
+        description => 'Description goes here may have to do a little validation',
+        image => 'www.urltoimage.com/blah.jpg',
+        url  => 'www.someurl.com',
+        player      => 'www.urltovideo.com/blah.jpg',
+        player_width => '500',
+        player_height => '500',            
+   );
+
+   $schema->create('summary featured_image player');
+   
+   $schema->create_article;
+   $schema->create_offer;
+   $schema->create_video;
+
 
 =head1 SUBROUTINES/METHODS
 
-=head2 create
+=head2 card_options
+
+An Hash Reference of card options available for this meta provider, it is used to map the create function when create is called.
 
 =cut
 
-=head2 build_meta_tags 
-
-OVERIDE build_meta_tags
-
-This builds the meta tags for Schema.org / Google products
-
-Firstly it adds generic meta data which is used in several google products including search snippets.
-
-Then we replicate build_meta_tags using the passed in fields to generate the meta information. I'm currently only 
-catering for the google+ Article Card. However I will look into expanding on this.
+=head2 build_fields 
+    
+An Hash Reference of fields that are attached to the selected card:
 
 =cut
 
-=head2 create 
+=head2 create_article
 
-currently only create one card type. 
-TODO - figure out the boundaries of schema.org
+Generate Schema Article meta data
 
 =cut
 
-=head2 create_card
+=head2 create_product
 
-Fields Required:
-* name
-* description
-* image
+Generate Schema Offer meta data
+
+=cut
+
+=head2 create_video
+
+Generate Schema Video meta data
 
 =cut
 

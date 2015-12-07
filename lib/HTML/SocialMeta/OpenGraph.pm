@@ -29,7 +29,7 @@ sub build_fields {
         video     => [
             qw(type site_name url title image description player player_width player_height)
         ],
-        product   => [qw(type title image description url)]
+        product => [qw(type title image description url)]
     );
 }
 
@@ -65,13 +65,11 @@ sub create_product {
     return $self->build_meta_tags( $self->type );
 }
 
-sub _provider_convert {
+sub provider_convert {
     my ( $self, $field ) = @_;
 
-    $field =~ tr/_/:/;
-
     my @app_fields;
-    
+
     if ( $field =~ s{^player}{video}xms ) {
 
         if ( $field =~ m{^video$}xms ) {
@@ -89,7 +87,6 @@ sub _provider_convert {
 
     return \@app_fields;
 }
-
 
 #
 # The End
@@ -114,46 +111,66 @@ Version 0.2
 
 Base class for creating OpenGraph meta data
 
-=head1 METHODS
-
-=cut
-
 =head1 SYNOPSIS
+
+   $opengraph_meta => HTML::Social::OpenGraph->new(
+        card_type => 'summary',
+        site => '@example_twitter',
+        site_name => 'Example Site, anything',
+        title => 'You can have any title you wish here',
+        description => 'Description goes here may have to do a little validation',
+        image => 'www.urltoimage.com/blah.jpg',
+        url  => 'www.someurl.com',
+        app_url_store => 'test',  - optional
+        player      => 'www.urltovideo.com/blah.jpg',
+        player_width => '500',
+        player_height => '500',            
+   );
+
+   $opengraph->create('summary featured_image app player');
+   
+   $opengraph->create_thumnail;
+   $opengraph->create_article;
+   $opengraph->create_product';
+   $opengraph->create_video;
+
+
 
 =head1 SUBROUTINES/METHODS
 
-=head2 create 
+=head2 card_options
 
-current card options
-
-    * summary
-    * featured_image
+An Hash Reference of card options available for this meta provider, it is used to map the create function when create is called.
 
 =cut
 
-=head2 create_thumbnail_card 
-
-Required Fields
-
-    * type
-    * title
-    * description
-    * url
-    * image 
-    * site_name 
+=head2 build_fields 
+    
+An Hash Reference of fields that are attached to the selected card:
 
 =cut
 
-=head2 create_article_card
+=head2 create_thumbnail
 
-Required Fields
+Generate OpenGraph Thumbnail meta data
 
-    * type
-    * title
-    * description
-    * url
-    * image 
-    * site_name 
+=cut
+
+=head2 create_article
+
+Generate OpenGraph Article meta data
+
+=cut
+
+=head2 create_product
+
+Generate OpenGraph Product meta data
+
+=cut
+
+=head2 create_video
+
+Generate OpenGraph Video meta data
 
 =cut
 

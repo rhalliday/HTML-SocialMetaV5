@@ -68,13 +68,11 @@ sub create_player {
     return $self->build_meta_tags( $self->card );
 }
 
-
-sub _provider_convert {
+sub provider_convert {
     my ( $self, $field ) = @_;
 
-    $field =~ tr/_/:/;
-
     my @app_fields;
+
     if ( $field =~ s{store}{}xms ) {
 
         push @app_fields, $field . 'iphone';
@@ -141,85 +139,69 @@ Base class to create Twitter Cards
 
    $twitter->create('summary featured_image app player');
    
-   $twitter->create_summary_card;
-   $twitter->create_featured_image_card;
-   $twitter->create_app_card;
-   $twitter->create_player_card;
+   $twitter->create_summary;
+   $twitter->create_summary_large_image;
+   $twitter->create_app;
+   $twitter->create_player;
 
 =cut 
 
 =head1 SUBROUTINES/METHODS
 
-=head2 create 
+=head1 VERSION
 
-    * summary
-    * featured_image
-    * app
-    * player
+Version 0.2
 
 =cut
 
-=head2 create_summary_card
+=head1 DESCRIPTION
 
-Required Fields
+Base class for creating OpenGraph meta data
 
-    * type
-    * title
-    * description
-    * url
-    * image 
-    * site_name 
+=head1 SYNOPSIS
 
-=cut
+=head1 SUBROUTINES/METHODS
 
-=head2 create_featured_image_card
+=head2 card_options
 
-Required Fields
-
-    * type
-    * title
-    * description
-    * url
-    * image 
-    * site_name 
+An Hash Reference of card options available for this meta provider, it is used to map the create function when create is called.
 
 =cut
 
-=head2 create_app_card
-
-Required Fields
-
-    * type
-    * site
-    * description
-    * app_country
-    * app_name_store 
-    * app_id_store
-    * app_url_store
-    * app_name_play
-    * app_id_play
-    * app_url_play  
+=head2 build_fields 
+    
+An Hash Reference of fields that are attached to the selected card:
 
 =cut
 
-=head3 create_player_card
+=head2 create_summary
 
-Required Fields
+Generate Twitter Summary meta data
 
-    * card 
-    * site 
-    * title 
-    * description 
-    * image 
-    * player 
-    * player_width 
-    * player_height
+=cut
+
+=head2 create_summary_large_image
+
+Generate Twitter Summary Large Image Video meta data
+
+=cut
+
+=head2 create_app
+
+Generate Twitter App meta data
+
+=cut
+
+=head2 create_player
+
+Generate Twitter Player meta data
 
 =cut
 
 =head1 AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
+Robert Haliday <robh@cpan.org>
 
 =head1 TODO
  

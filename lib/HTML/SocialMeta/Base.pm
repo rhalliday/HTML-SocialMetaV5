@@ -5,14 +5,12 @@ use Carp;
 our $VERSION = '0.2';
 
 # A list of fields which the cards may possibly use
-has [
-    qw(card_type card type name url)
-  ] => ( 
-    isa => 'Str', 
-    is => 'rw', 
-    lazy => 1, 
-    default => q{}, 
-  );
+has [qw(card_type card type name url)] => (
+    isa     => 'Str',
+    is      => 'rw',
+    lazy    => 1,
+    default => q{},
+);
 
 has [
     qw(site site_name title description image creator app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play player player_height player_width)
@@ -22,7 +20,6 @@ has [
     lazy    => 1,
     default => q{},
   );
-
 
 sub create {
     my ( $self, $card_type ) = @_;
@@ -40,14 +37,16 @@ sub create {
 }
 
 sub build_meta_tags {
-    my ( $self, $field ) = @_;
+    my ( $self, $field_type ) = @_;
 
     my @meta_tags;
 
-    push @meta_tags, $self->item_type
-        if $self->meta_attribute eq q{itemprop};
+    if ( $self->meta_attribute eq q{itemprop} ) {
+        push @meta_tags, $self->item_type;
+    }
 
-    foreach my $field ( $self->required_fields($field) ) {
+    foreach my $field ( $self->required_fields($field_type) ) {
+
         # check the field has a value set
         $self->_validate_field_value($field);
 
@@ -118,7 +117,7 @@ sub _convert_field {
 
     $field =~ tr/_/:/;
 
-    return $self->_provider_convert($field);
+    return $self->provider_convert($field);
 }
 
 sub meta_option {
@@ -170,11 +169,47 @@ Version 0.2
 
 =head1 SYNOPSIS
 
+    use HTML::SocialMeta;
+    # summary or featured image 
+    my $social = HTML::SocialCards->new(
+        site => '',
+        site_name => '',
+        title => '',
+        description => '',
+        image   => '',
+        url  => '',  # optional
+        ... => '',
+        ... => '',
+    );
+
+    # returns meta tags for all providers   
+    my $meta_tags = $social->create('summary | featured_image | app | player');
+
+    # returns meta tags specificly for a single provider
+    my $twitter_tags = $social->twitter;
+    my $opengraph_tags = $social->opengraph;
+    my $schema = $social->create->schema
+
+    my $twitter->create('summary' | 'featured_image' | 'player' | 'app');
+
+
 =head1 SUBROUTINES/METHODS
+
+=head2 create
+
+Generates meta tags for all providers, takes a card_type and converts it into a provider specific card
+
+                        twitter                 opengraph          schema
+    * summary           summary                 thumbnail          article
+    * featured_image    summary_large_image     article            offer 
+    * player            player                  video              video
+    * app               app                     product             ***                 
+
+=cut
 
 =head2 build_meta_tags 
 
-This builds the meta tags for Twitter and OpenGraph
+This builds the meta tags for the meta providers
 
 It takes an array of fields, which loops through firstly checking 
 that we have a value set and then actually building the specific tag
@@ -191,8 +226,6 @@ returns an array of the fields that are required to build a specific card
 =head1 AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
-
-With special thanks to:
 Robert Haliday <robh@cpan.org>
 
 =head1 TODO

@@ -92,7 +92,7 @@ sub build_twitter {
 sub build_opengraph {
     my $self = shift;
 
-    my $url = $self->app_url_store ? $self->app_url_store : $self->url; 
+    my $url = $self->app_url_store ? $self->app_url_store : $self->url;
 
     return HTML::SocialMeta::OpenGraph->new(
         card_type     => $self->card_type,
@@ -111,7 +111,7 @@ sub build_schema {
     my $self = shift;
 
     return HTML::SocialMeta::Schema->new(
-    	title         => $self->title,
+        title         => $self->title,
         name          => $self->title,
         description   => $self->description,
         image         => $self->image,
@@ -167,26 +167,19 @@ i.e  $social->create('summary') will generate:
 It allows you to optimize sharing on several social media platforms such as Twitter, Facebook, Google+ 
 and Pinerest by defining exactly how titles, descriptions, images and more appear in social streams.
 
-It generates all the required META data that is needed to create social cards for the following Providers:
+It generates all the required META data for the following Providers:
 
 	* Twitter
 	* OpenGraph
 	* Schema.org
 
-These are then supported on the following sites, just to name a few
+This module currently allows you to create the following cards:
 
-	* Facebook
-    	* LinkedIn
-    	* Reddit
-    	* Pinerest
-    	* Twitter
-
-This module currently only following card types:
-
-	* summary -thumbnail image on the left hand side, with title and description on the right 
-	* featured_image - full featured image with text underneath
-	* app - App Card
-	* video - Video Card
+	$social->create()   $twitter->create_       $opengraph->create_  	$schema->create_
+    * summary           summary                 thumbnail          		article
+    * featured_image    summary_large_image     article            		offer 
+    * player            player                  video              		video
+    * app               app                     product             	***                 
 
 =head1 SYNOPSIS
 
@@ -255,17 +248,11 @@ Returns an instance of this class. Requires C<$url> as an argument;
 
 Returns an instance for the summary card:
 	
-	card => 'summary'
-
-or	
-
 	$meta->create('summary');
-
-or
-
-	my $twitter_summary_card = $social->twitter->create_summary;
-	my $opengraph_thumbnail_card = $social->opengraph->create_thumbnail;
-	my $schema_tags = $social->schema->create_article;
+	# call meta provider specifically
+	$card->twitter->create_summary;
+	$card->opengraph->create_thumbnail;
+	$card->schema->create_article;
 
 fields required:
 
@@ -293,16 +280,11 @@ fields required:
 
 Returns an instance for the featured image card:
 
-	card => 'featured_image' 
-
-or
-	
 	$card->create('featured_image');	
-
-or
-
-	my $twitter_featured_image_card = $social->twitter->create_featured_image;
-	my $opengraph_article_card = $meta_tags->opengraph->create_article;
+	# call meta provider specifically
+	$card->twitter->create_featured_image;
+	$card->opengraph->create_article;
+	$card->schema->create_offer;
 
 Fields Required:
 
@@ -320,7 +302,7 @@ Fields Required:
 
 	,-----------------------------------,
 	| Title	                            |	
-	| link	 			    |
+	| link	 			   				|
 	| *-------------------------------* |
 	| |                               | |
 	| |                               | |
@@ -333,17 +315,11 @@ Fields Required:
 
 Returns an instance for the player card:
 
-	card => 'player' 
-
-or
-	
 	$card->create('player');	
-
-or
-
-	my $twitter_player_card = $social->twitter->create_player;
-	my $opengraph_video_card = $meta_tags->opengraph->create_video;
-	my $schema_card = $meta_tags->schema->create_video;
+	# call meta provider specifically
+	$card->twitter->create_player;
+	$card->opengraph->create_video;
+	$card->schema->create_video;
 
 Fields Required:
  
@@ -359,8 +335,6 @@ Fields Required:
 
 =head2 App Card
 
-*Currently only supporting the App card for twitter
-
 	,-----------------------------------,
 	|   APP NAME              *-------* |
 	|   APP INFO              |  app  | |
@@ -371,7 +345,10 @@ Fields Required:
 
 Return an instance for the provider specific app card:
 
-	my $twitter_app_card = $social->twitter->create_app;
+	$card->create('app);	
+	# call meta provider specifically
+	$card->twitter->create_app;
+	$card->twitter->create_product;
 
 Fields Required
 
@@ -405,7 +382,7 @@ You just need to specify the card type on create
 
 =head2 required_fields
 
-Returns an array of fields that are required to build the cards
+Returns a list of fields that are required to build the meta tags
 
 	$social = HTML->SocialMeta->new();
 	# @fields = qw{}
@@ -413,23 +390,9 @@ Returns an array of fields that are required to build the cards
 
 =cut
 
-=head1 AUTHOR
-
-Robert Acock <ThisUsedToBeAnEmail@gmail.com>
-
-With special thanks to:
-Robert Haliday <robh@cpan.org>
-
-=head1 TODO
- 
-    * Add support for more social Card Types / Meta Providers
-    * Additiona Meta Tag Support
- 
 =head1 BUGS AND LIMITATIONS
  
 Please report any bugs at http://rt.cpan.org/.
-
-=head1 INCOMPATIBILITIES
 
 =head1 DEPENDENCIES
 
@@ -437,9 +400,40 @@ Moose - Version 2.0604
 Namespace::Autoclean - Verstion 0.15
 List::MoreUtils - Version 0.413 
 
+=head1 DIAGNOSTICS
+
+A. Twitter Validation Tool
+
+https://dev.twitter.com/docs/cards/validation/validator
+
+Before your cards show on Twitter, you must first have your domain approved. Fortunately, 
+it's a super-easy process. After you implement your cards, simply enter your sample URL into 
+the validation tool. After checking your markup, select the "Submit for Approval" button.
+
+B. Facebook Debugger
+
+https://developers.facebook.com/tools/debug
+
+You don't need prior approval for your meta information to show on Facebook, 
+but the debugging tool they offer gives you a wealth of information about all your 
+tags and can also analyze your Twitter tags.
+
+C. Google Structured Data Testing Tool
+
+http://www.google.com/webmasters/tools/richsnippets
+
+Webmasters traditionally use the structured data testing tool to test authorship markup and preview
+how snippets will appear in search results, but you can also use see what other types of
+meta data Google is able to extract from each page.
+
+=head1 AUTHOR
+
+Robert Acock <ThisUsedToBeAnEmail@gmail.com>
+Robert Haliday <robh@cpan.org>
+
 =head1 CONFIGURATION AND ENVIRONMENT
 
-=head1 DIAGNOSTICS
+=head1 INCOMPATIBILITIES
 
 =head1 LICENSE AND COPYRIGHT
  
