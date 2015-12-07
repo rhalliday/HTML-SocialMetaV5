@@ -42,14 +42,14 @@ It generates all the required META data for the following Providers:
 This module currently allows you to create the following cards:
 
         $social->create()   $twitter->create_       $opengraph->create_         $schema->create_
-    * summary           summary                 thumbnail                       article
-    * featured_image    summary_large_image     article                         offer 
-    * player            player                  video                           video
-    * app               app                     product                 ***                 
+        * summary           summary                 thumbnail                       article
+        * featured_image    summary_large_image     article                         offer 
+        * player            player                  video                           video
+        * app               app                     product                 ***                 
 
 # SYNOPSIS
 
-    use HTML::SocialMeta;
+        use HTML::SocialMeta;
         # summary or featured image 
         my $social = HTML::SocialCards->new(
                 site => '',
@@ -164,7 +164,7 @@ Fields Required:
 
         ,-----------------------------------,
         | Title                             |   
-        | link                                                          |
+        | link                              |
         | *-------------------------------* |
         | |                               | |
         | |                               | |
