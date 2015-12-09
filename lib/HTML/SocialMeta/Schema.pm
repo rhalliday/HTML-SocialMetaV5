@@ -19,6 +19,7 @@ sub card_options {
         summary        => q(create_article),
         featured_image => q(create_offer),
         player         => q(create_video),
+        app            => q(create_software_application),
     );
 }
 
@@ -26,7 +27,8 @@ sub build_fields {
     return (
         article => [qw(name description image)],
         offer   => [qw(name description image)],
-        video => [qw(name description image player player_width player_height)]
+        video => [qw(name description image player player_width player_height)],
+        software_application => [qw(name description image operatingSystem url)]
     );
 }
 
@@ -63,19 +65,29 @@ q{<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />}
     return $self->build_meta_tags('video');
 }
 
+sub create_software_application {
+    my ($self) = @_;
+
+    $self->item_type(
+q{<meta itemprop="software_application" itemscope itemtype="http://schema.org/SoftwareApplication" />}
+          . "\n"
+          . q{<link itemprop="applicationCategory" href="http://schema.org/GameApplication"/>}
+
+    );
+
+    return $self->build_meta_tags('software_application');
+}
+
 override _convert_field => sub {
     my ( $self, $field ) = @_;
 
-    my @app_fields;
-
     if ( $field =~ s{player_}{}xms ) {
-        push @app_fields, $field;
+        return [$field];
     }
     else {
-        push @app_fields, qw(embedURL contentURL);
+        return [qw(embedURL contentURL)];
     }
 
-    return \@app_fields;
 };
 
 override _build_field => sub {

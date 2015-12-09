@@ -68,18 +68,14 @@ my $app_meta_tags = HTML::SocialMeta->new(
     title => 'You can have any title you wish here',
     description => 'Description goes here may have to do a little validation',
     image => 'www.urltoimage.com/blah.jpg',
-    url	 => 'www.someurl.com',
-    app_url_store => 'someappurl',
-    player => 'www.somevideourl.com/url/url',
-    player_width => '500',
-    player_height => '500',
+    app_url	 => 'www.someurl.com',
 );
 
 my $test_app = '<meta property="og:type" content="product"/>
 <meta property="og:title" content="You can have any title you wish here"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:description" content="Description goes here may have to do a little validation"/>
-<meta property="og:url" content="someappurl"/>';
+<meta property="og:url" content="www.someurl.com"/>';
 
 is($app_meta_tags->opengraph->create('app'), $test_app);
 

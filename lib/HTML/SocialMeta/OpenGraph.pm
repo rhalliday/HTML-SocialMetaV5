@@ -68,24 +68,12 @@ sub create_product {
 sub provider_convert {
     my ( $self, $field ) = @_;
 
-    my @app_fields;
+    $field =~ s{^player}{video}xms;
 
-    if ( $field =~ s{^player}{video}xms ) {
+    return [ $field . ':url', $field . ':secure_url' ]
+      if $field =~ m{^video$}xms;
 
-        if ( $field =~ m{^video$}xms ) {
-
-            push @app_fields, $field . ':url';
-            push @app_fields, $field . ':secure_url';
-
-        }
-        else {
-
-            push @app_fields, $field;
-
-        }
-    }
-
-    return \@app_fields;
+    return [$field];
 }
 
 #

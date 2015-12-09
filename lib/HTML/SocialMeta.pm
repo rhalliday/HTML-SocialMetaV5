@@ -11,7 +11,7 @@ our $VERSION = '0.2';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
-    qw(card site site_name title description image url creator app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play player player_height player_width)
+    qw(card site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width)
   ] => (
     is      => 'ro',
     isa     => 'Str',
@@ -69,55 +69,58 @@ sub build_twitter {
     my $self = shift;
 
     return HTML::SocialMeta::Twitter->new(
-        card_type      => $self->card_type,
-        site           => $self->site,
-        title          => $self->title,
-        description    => $self->description,
-        image          => $self->image,
-        url            => $self->url,
-        creator        => $self->creator,
-        app_country    => $self->app_country,
-        app_name_store => $self->app_name_store,
-        app_id_store   => $self->app_id_store,
-        app_url_store  => $self->app_url_store,
-        app_name_play  => $self->app_name_play,
-        app_id_play    => $self->app_id_play,
-        app_url_play   => $self->app_url_play,
-        player         => $self->player,
-        player_width   => $self->player_width,
-        player_height  => $self->player_height,
+        card_type       => $self->card_type,
+        site            => $self->site,
+        title           => $self->title,
+        description     => $self->description,
+        image           => $self->image,
+        url             => $self->url,
+        creator         => $self->creator,
+        operatingSystem => $self->operatingSystem,
+        app_country     => $self->app_country,
+        app_name        => $self->app_name,
+        app_id          => $self->app_id,
+        app_url         => $self->app_url,
+        player          => $self->player,
+        player_width    => $self->player_width,
+        player_height   => $self->player_height,
     );
 }
 
 sub build_opengraph {
     my $self = shift;
 
-    my $url = $self->app_url_store ? $self->app_url_store : $self->url;
+    my $url = $self->app_url ? $self->app_url : $self->url;
 
     return HTML::SocialMeta::OpenGraph->new(
-        card_type     => $self->card_type,
-        site_name     => $self->site_name,
-        title         => $self->title,
-        description   => $self->description,
-        image         => $self->image,
-        url           => $url,
-        player        => $self->player,
-        player_width  => $self->player_width,
-        player_height => $self->player_height,
+        card_type       => $self->card_type,
+        site_name       => $self->site_name,
+        title           => $self->title,
+        description     => $self->description,
+        image           => $self->image,
+        url             => $url,
+        operatingSystem => $self->operatingSystem,
+        player          => $self->player,
+        player_width    => $self->player_width,
+        player_height   => $self->player_height,
     );
 }
 
 sub build_schema {
     my $self = shift;
 
+    my $url = $self->app_url ? $self->app_url : $self->url;
+
     return HTML::SocialMeta::Schema->new(
-        title         => $self->title,
-        name          => $self->title,
-        description   => $self->description,
-        image         => $self->image,
-        player        => $self->player,
-        player_width  => $self->player_width,
-        player_height => $self->player_height,
+        title           => $self->title,
+        name            => $self->title,
+        description     => $self->description,
+        image           => $self->image,
+        url             => $url,
+        operatingSystem => $self->operatingSystem,
+        player          => $self->player,
+        player_width    => $self->player_width,
+        player_height   => $self->player_height,
     );
 }
 
@@ -142,7 +145,7 @@ Version 0.2
 
 =head1 DESCRIPTION
 
-This module makes it easy to create social meta cards.
+This module makes it easy to generate social meta data.
 
 i.e  $social->create('summary') will generate:
 	
@@ -179,7 +182,7 @@ This module currently allows you to create the following cards:
     * summary           summary                 thumbnail          		article
     * featured_image    summary_large_image     article            		offer 
     * player            player                  video              		video
-    * app               app                     product             	***                 
+    * app               app                     product             	software_aplication                 
 
 =head1 SYNOPSIS
 
@@ -348,19 +351,19 @@ Return an instance for the provider specific app card:
 	$card->create('app);	
 	# call meta provider specifically
 	$card->twitter->create_app;
-	$card->twitter->create_product;
+	$card->opengraph->create_product;
+	$card->schema->create_software_application;
 
 Fields Required
 
 	* site
+	* title
 	* description
+	* operatingSystem
 	* app_country
-	* app_name_store
-	* app_id_store
-	* app_url_store
-	* app_id_play
-	* app_id_play
-	* app_id_play
+	* app_name
+	* app_id
+	* app_url
 
 price and app info pulled from the app stores?
 

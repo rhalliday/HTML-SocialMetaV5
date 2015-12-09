@@ -27,9 +27,8 @@ sub build_fields {
     return (
         summary             => [qw(card site title description image)],
         summary_large_image => [qw(card site title description image)],
-        app                 => [
-            qw(card site description app_country app_name_store app_id_store app_url_store app_name_play app_id_play app_url_play)
-        ],
+        app =>
+          [ qw(card site description app_country app_name app_id app_url) ],
         player => [
             qw(card site title description image player player_width player_height)
         ],
@@ -71,25 +70,16 @@ sub create_player {
 sub provider_convert {
     my ( $self, $field ) = @_;
 
-    my @app_fields;
+    return [$field]
+      if $field !~ m{^app}xms || $field =~ m{country$}xms;
 
-    if ( $field =~ s{store}{}xms ) {
+    return [ $field . ':googleplay' ]
+      if $self->operatingSystem eq q{ANDROID};
 
-        push @app_fields, $field . 'iphone';
-        push @app_fields, $field . 'ipad';
+    return [ $field . ':iphone', $field . ':ipad' ]
+      if $self->operatingSystem eq q{IOS};
 
-    }
-    elsif ( $field =~ s{ play $ }{}xms ) {
-
-        push @app_fields, $field . 'googleplay';
-
-    }
-    else {
-        push @app_fields, $field;
-
-    }
-
-    return \@app_fields;
+    return croak 'We currently do not support this APP type';
 }
 
 #
@@ -125,13 +115,11 @@ Base class to create Twitter Cards
         description => 'Description goes here may have to do a little validation',
         image => 'www.urltoimage.com/blah.jpg',
         url  => 'www.someurl.com',
+        operatingSystem => 'ANDROID',
         app_country => 'test',
-        app_name_store => 'test',
-        app_id_store => 'test',
-        app_url_store => 'test',
-        app_name_play => 'test',
-        app_id_play => 'test',
-        app_url_play => 'test',
+        app_name  => 'test',
+        app_id => 'test',
+        app_url => 'test',
         player      => 'www.urltovideo.com/blah.jpg',
         player_width => '500',
         player_height => '500',            

@@ -114,6 +114,86 @@ my $test_player_card = '<meta itemprop="video" itemscope itemtype="http://schema
 
 is($create_player, $test_player_card);
 
+# Build Some Test Data Which Is Valid
+my $android_app_tags = HTML::SocialMeta->new(
+    card_type => 'summary',
+    site => '@example_twitter',
+    site_name => 'Example Site, anything',
+    title => 'You can have any title you wish here',
+    description => 'Description goes here may have to do a little validation',
+    image => 'www.urltoimage.com/blah.jpg',
+    url  => 'www.someurl.com',
+    operatingSystem => 'ANDROID',
+    app_country => 'US',
+    app_name => 'tester twitter',
+    app_id => '1232', 
+    app_url => 'app.app.com/app',
+);
+
+my $android_test_tags = q(<meta itemprop="software_application" itemscope itemtype="http://schema.org/SoftwareApplication" />
+<link itemprop="applicationCategory" href="http://schema.org/GameApplication"/>
+<meta itemprop="name" content="You can have any title you wish here"/>
+<meta itemprop="description" content="Description goes here may have to do a little validation"/>
+<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
+<meta itemprop="operatingSystem" content="ANDROID"/>
+<meta itemprop="url" content="app.app.com/app"/>
+<meta name="twitter:card" content="app"/>
+<meta name="twitter:site" content="@example_twitter"/>
+<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:app:country" content="US"/>
+<meta name="twitter:app:name:googleplay" content="tester twitter"/>
+<meta name="twitter:app:id:googleplay" content="1232"/>
+<meta name="twitter:app:url:googleplay" content="app.app.com/app"/>
+<meta property="og:type" content="product"/>
+<meta property="og:title" content="You can have any title you wish here"/>
+<meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
+<meta property="og:description" content="Description goes here may have to do a little validation"/>
+<meta property="og:url" content="app.app.com/app"/>);
+
+is($android_app_tags->create('app'), $android_test_tags);
+
+
+# Build Some Test Data Which Is Valid
+my $ios_app_tags = HTML::SocialMeta->new(
+    card_type => 'summary',
+    site => '@example_twitter',
+    site_name => 'Example Site, anything',
+    title => 'You can have any title you wish here',
+    description => 'Description goes here may have to do a little validation',
+    image => 'www.urltoimage.com/blah.jpg',
+    url  => 'www.someurl.com',
+    operatingSystem => 'IOS',
+    app_country => 'US',
+    app_name => 'tester twitter',
+    app_id => '1232', 
+    app_url => 'app.app.com/app',
+);
+
+my $ios_test_tags = q(<meta itemprop="software_application" itemscope itemtype="http://schema.org/SoftwareApplication" />
+<link itemprop="applicationCategory" href="http://schema.org/GameApplication"/>
+<meta itemprop="name" content="You can have any title you wish here"/>
+<meta itemprop="description" content="Description goes here may have to do a little validation"/>
+<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
+<meta itemprop="operatingSystem" content="IOS"/>
+<meta itemprop="url" content="app.app.com/app"/>
+<meta name="twitter:card" content="app"/>
+<meta name="twitter:site" content="@example_twitter"/>
+<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:app:country" content="US"/>
+<meta name="twitter:app:name:iphone" content="tester twitter"/>
+<meta name="twitter:app:name:ipad" content="tester twitter"/>
+<meta name="twitter:app:id:iphone" content="1232"/>
+<meta name="twitter:app:id:ipad" content="1232"/>
+<meta name="twitter:app:url:iphone" content="app.app.com/app"/>
+<meta name="twitter:app:url:ipad" content="app.app.com/app"/>
+<meta property="og:type" content="product"/>
+<meta property="og:title" content="You can have any title you wish here"/>
+<meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
+<meta property="og:description" content="Description goes here may have to do a little validation"/>
+<meta property="og:url" content="app.app.com/app"/>);
+
+is($ios_app_tags->create('app'), $ios_test_tags);
+
 done_testing();
 
 1;

@@ -16,13 +16,11 @@ my $meta_tags = HTML::SocialMeta->new(
     description => 'Description goes here may have to do a little validation',
     image => 'www.urltoimage.com/blah.jpg',
     url	 => 'www.someurl.com',
+    operatingSystem => 'ANDROID',
     app_country => 'test',
-    app_name_store => 'test',
-    app_id_store => 'test', 
-    app_url_store => 'test',
-    app_name_play => 'test', 
-    app_id_play => 'test',
-    app_url_play => 'test',
+    app_name => 'test',
+    app_id => 'test', 
+    app_url => 'test',
     player      => 'www.urltovideo.com/blah.jpg',
     player_width => '500',
     player_height => '500',
@@ -36,6 +34,21 @@ my $meta_player_tags = HTML::SocialMeta->new(
     image => 'www.urltoimage.com/blah.jpg',
     player_width => '500',
     player_height => '500',
+);
+
+# Build Some Test Data Which Is Valid
+my $ios_app_tags = HTML::SocialMeta->new(
+    card_type => 'summary',
+    site => '@example_twitter',
+    title => 'You can have any title you wish here',
+    description => 'Description goes here may have to do a little validation',
+    image => 'www.urltoimage.com/blah.jpg',
+    url  => 'www.someurl.com',
+    operatingSystem => 'IOS',
+    app_country => 'US',
+    app_name => 'tester twitter',
+    app_id => '1232', 
+    app_url => 'app.app.com/app',
 );
 
 ok($meta_tags);
@@ -69,12 +82,6 @@ my $test_twitter_app_card = '<meta name="twitter:card" content="app"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
 <meta name="twitter:app:country" content="test"/>
-<meta name="twitter:app:name:iphone" content="test"/>
-<meta name="twitter:app:name:ipad" content="test"/>
-<meta name="twitter:app:id:iphone" content="test"/>
-<meta name="twitter:app:id:ipad" content="test"/>
-<meta name="twitter:app:url:iphone" content="test"/>
-<meta name="twitter:app:url:ipad" content="test"/>
 <meta name="twitter:app:name:googleplay" content="test"/>
 <meta name="twitter:app:id:googleplay" content="test"/>
 <meta name="twitter:app:url:googleplay" content="test"/>';
@@ -93,6 +100,20 @@ my $test_player_card = '<meta name="twitter:card" content="player"/>
 
 is($twitter->create('player'), $test_player_card);
 is($twitter_player_card, $test_player_card);
+
+my $ios_test_tags = q(<meta name="twitter:card" content="app"/>
+<meta name="twitter:site" content="@example_twitter"/>
+<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:app:country" content="US"/>
+<meta name="twitter:app:name:iphone" content="tester twitter"/>
+<meta name="twitter:app:name:ipad" content="tester twitter"/>
+<meta name="twitter:app:id:iphone" content="1232"/>
+<meta name="twitter:app:id:ipad" content="1232"/>
+<meta name="twitter:app:url:iphone" content="app.app.com/app"/>
+<meta name="twitter:app:url:ipad" content="app.app.com/app"/>);
+
+is($ios_app_tags->twitter->create('app'), $ios_test_tags);
+is($ios_app_tags->twitter->create_app, $ios_test_tags);
 
 done_testing();
 

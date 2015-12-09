@@ -42,14 +42,14 @@ It generates all the required META data for the following Providers:
 This module currently allows you to create the following cards:
 
         $social->create()   $twitter->create_       $opengraph->create_         $schema->create_
-        * summary           summary                 thumbnail                       article
-        * featured_image    summary_large_image     article                         offer 
-        * player            player                  video                           video
-        * app               app                     product                 ***                 
+    * summary           summary                 thumbnail                       article
+    * featured_image    summary_large_image     article                         offer 
+    * player            player                  video                           video
+    * app               app                     product                 software_aplication                 
 
 # SYNOPSIS
 
-        use HTML::SocialMeta;
+    use HTML::SocialMeta;
         # summary or featured image 
         my $social = HTML::SocialCards->new(
                 site => '',
@@ -91,12 +91,12 @@ Returns an instance of this class. Requires `$url` as an argument;
 
         my $social = URL::Social->new(
                 card => '...',          * card type - currently either summary or featured_image
-                site => '',             * twitter site - @twitter_handle 
+                site => '',                     * twitter site - @twitter_handle 
                 site_name => '',        * sites name - Example Business
                 title => '',            * card title - title of the card 
                 description => '',      * description - content of the card
                 image => '',            * attached image - url http/www.someurl.com/test.jpg
-                url => '',              * url where the content is hosted, or url to some completly randon html page
+                url => '',                      * url where the content is hosted, or url to some completly randon html page
                 ... => '',
                 ... => '',
         );
@@ -164,7 +164,7 @@ Fields Required:
 
         ,-----------------------------------,
         | Title                             |   
-        | link                              |
+        | link                                                          |
         | *-------------------------------* |
         | |                               | |
         | |                               | |
@@ -208,19 +208,19 @@ Return an instance for the provider specific app card:
         $card->create('app);    
         # call meta provider specifically
         $card->twitter->create_app;
-        $card->twitter->create_product;
+        $card->opengraph->create_product;
+        $card->schema->create_software_application;
 
 Fields Required
 
         * site
+        * title
         * description
+        * operatingSystem
         * app_country
-        * app_name_store
-        * app_id_store
-        * app_url_store
-        * app_id_play
-        * app_id_play
-        * app_id_play
+        * app_name
+        * app_id
+        * app_url
 
 price and app info pulled from the app stores?
 
@@ -252,9 +252,7 @@ Please report any bugs at http://rt.cpan.org/.
 # DEPENDENCIES
 
 Moose - Version 2.0604
-
 Namespace::Autoclean - Verstion 0.15
-
 List::MoreUtils - Version 0.413 
 
 # DIAGNOSTICS
@@ -286,7 +284,6 @@ meta data Google is able to extract from each page.
 # AUTHOR
 
 Robert Acock <ThisUsedToBeAnEmail@gmail.com>
-
 Robert Haliday &lt;robh@cpan.org>
 
 # CONFIGURATION AND ENVIRONMENT
