@@ -42,14 +42,14 @@ It generates all the required META data for the following Providers:
 This module currently allows you to create the following cards:
 
         $social->create()   $twitter->create_       $opengraph->create_         $schema->create_
-    * summary           summary                 thumbnail                       article
-    * featured_image    summary_large_image     article                         offer 
-    * player            player                  video                           video
-    * app               app                     product                 software_aplication                 
+        * summary           summary                 thumbnail                   article
+        * featured_image    summary_large_image     article                     offer 
+        * player            player                  video                       video
+        * app               app                     product                     software_aplication                 
 
 # SYNOPSIS
 
-    use HTML::SocialMeta;
+        use HTML::SocialMeta;
         # summary or featured image 
         my $social = HTML::SocialCards->new(
                 site => '',
@@ -96,7 +96,7 @@ Returns an instance of this class. Requires `$url` as an argument;
                 title => '',            * card title - title of the card 
                 description => '',      * description - content of the card
                 image => '',            * attached image - url http/www.someurl.com/test.jpg
-                url => '',                      * url where the content is hosted, or url to some completly randon html page
+                url => '',              * url where the content is hosted, or url to some completly randon html page
                 ... => '',
                 ... => '',
         );
@@ -164,7 +164,7 @@ Fields Required:
 
         ,-----------------------------------,
         | Title                             |   
-        | link                                                          |
+        | link                              |
         | *-------------------------------* |
         | |                               | |
         | |                               | |
