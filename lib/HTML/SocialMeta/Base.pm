@@ -21,14 +21,19 @@ has [
     default => q{},
   );
 
+# default should be overridden by sub-classes
+has [qw(card_options build_fields)] => (
+    is      => 'ro',
+    isa     => 'HashRef',
+	default => sub{ {} },
+);
+
 sub create {
     my ( $self, $card_type ) = @_;
 
     $card_type ||= $self->card_type;
 
-    my %card_options = $self->card_options;
-
-    if ( my $option = $card_options{$card_type} ) {
+    if ( my $option = $self->card_options->{$card_type} ) {
 
         return $self->$option;
     }
@@ -59,18 +64,13 @@ sub build_meta_tags {
 sub required_fields {
     my ( $self, $field ) = @_;
 
-    my %required_fields = $self->build_fields;
-
-    if ( my @options = @{ $required_fields{$field} } ) {
-
-        return @options;
-    }
+    return exists $self->build_fields->{$field} ? @{ $self->build_fields->{$field} } : ();
 }
 
 sub _validate_field_value {
     my ( $self, $field ) = @_;
 
-    # look to see we have the fields atrribute set
+    # look to see we have the fields attribute set
     croak q{you have not set this field value } . $field
       if !$self->$field;
 
@@ -80,16 +80,11 @@ sub _validate_field_value {
 sub _generate_meta_tag {
     my ( $self, $field ) = @_;
 
+	# fields that don't start with app or player generate a single tag
+    return $self->_build_field($field) if $field !~ m{^(app|player)}xms;
+
+	# fields that start with app or player generate multiple tags
     my @tags = ();
-
-    if ( $field =~ m{^player}xms ) {
-        for ( @{ $self->_convert_field($field) } ) {
-            push @tags, $self->_build_field( $field, $_ );
-        }
-        return @tags;
-    }
-
-    return $self->_build_field($field) if $field !~ m{^app}xms;
 
     for ( @{ $self->_convert_field($field) } ) {
         push @tags, $self->_build_field( $field, $_ );
@@ -101,7 +96,7 @@ sub _generate_meta_tag {
 sub _build_field {
     my ( $self, $field, $field_type ) = @_;
 
-    $field_type = $field_type ? $field_type : $field;
+    $field_type ||= $field;
 
     return
         q{<meta }
@@ -123,10 +118,7 @@ sub _convert_field {
 sub meta_option {
     my ( $self, $card_type ) = @_;
 
-    # get the current providers card options
-    my %cards = $self->card_options;
-
-    if ( my $option = $cards{$card_type} ) {
+    if ( my $option = $self->card_options->{$card_type} ) {
 
         # remove create_ and we have the card type
         $option =~ s{^create_}{}xms;
