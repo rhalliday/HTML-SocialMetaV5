@@ -145,80 +145,80 @@ Version 0.2
 
 =head1 DESCRIPTION
 
-This module makes it easy to generate social meta data.
+This module makes generates social meta tags.
 
 i.e  $social->create('summary') will generate:
-	
-	<html itemscope itemtype="http://schema.org/Article">
-	<title>You can have any title you wish here</title>
-	<meta name="description" content="Description goes here may have to do a little validation">
-	<meta itemprop="name" content="You can have any title you wish here"/>
-	<meta itemprop="description" content="Description goes here may have to do a little validation"/>
-	<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
-	<meta name="twitter:card" content="summary"/>
-	<meta name="twitter:site" content="@example_twitter"/>
-	<meta name="twitter:title" content="You can have any title you wish here"/>
-	<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
-	<meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
-	<meta property="og:type" content="thumbnail"/>
-	<meta property="og:title" content="You can have any title you wish here"/>
-	<meta property="og:description" content="Description goes here may have to do a little validation"/>
-	<meta property="og:url" content="www.someurl.com"/>
-	<meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
-	<meta property="og:site_name" content="Example Site, anything"/>
+    
+    <meta itemprop="article" itemscope itemtype="http://schema.org/Article" />
+    <meta itemprop="name" content="You can have any title you wish here"/>
+    <meta itemprop="description" content="Description goes here may have to do a little validation"/>
+    <meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@example_twitter"/>
+    <meta name="twitter:title" content="You can have any title you wish here"/>
+    <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+    <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
+    <meta property="og:type" content="thumbnail"/>
+    <meta property="og:title" content="You can have any title you wish here"/>
+    <meta property="og:description" content="Description goes here may have to do a little validation"/>
+    <meta property="og:url" content="www.someurl.com"/>
+    <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
+    <meta property="og:site_name" content="Example Site, anything"/>'
 
 It allows you to optimize sharing on several social media platforms such as Twitter, Facebook, Google+ 
 and Pinerest by defining exactly how titles, descriptions, images and more appear in social streams.
 
 It generates all the required META data for the following Providers:
 
-	* Twitter
-	* OpenGraph
-	* Schema.org
+    * Twitter
+    * OpenGraph
+    * Schema.org
 
-This module currently allows you to create the following cards:
+This module currently allows you to generate the following meta cards:
 
-	$social->create()   $twitter->create_       $opengraph->create_  	$schema->create_
-    * summary           summary                 thumbnail          		article
-    * featured_image    summary_large_image     article            		offer 
-    * player            player                  video              		video
-    * app               app                     product             	software_aplication                 
+    $social->create()  $twitter->create_       $opengraph->create_  	$schema->create_
+    summary            summary                 thumbnail         	article
+    featured_image     summary_large_image     article            	offer 
+    player             player                  video              	video
+    app                app                     product             	software_aplication                 
 
 =head1 SYNOPSIS
 
     use HTML::SocialMeta;
-	# summary or featured image 
-	my $social = HTML::SocialCards->new(
-		site => '',
-		site_name => '',
-		title => '',
-		description => '',
-		image	=> '',
-		url  => '',  # optional
-		... => '',
-		... => '',
-	);
+    # summary or featured image card setup
+    my $social = HTML::SocialCards->new(
+        site => '',
+        site_name => '',
+        title => '',
+        description => '',
+        image	=> '',
+        url  => '',  # optional
+        ... => '',
+        ... => '',
+    );
 
-	# returns meta tags for all providers	
-	my $meta_tags = $social->create('summary | featured_image | app | player');
+    # returns meta tags for all providers	
+    my $meta_tags = $social->create('summary | featured_image | app | player');
 
-	# returns meta tags specificly for a single provider
-	my $twitter_tags = $social->twitter;
-	my $opengraph_tags = $social->opengraph;
-	my $schema = $social->create->schema
+    # returns meta tags specificly for a single provider
+    my $twitter_tags = $social->twitter;
+    my $opengraph_tags = $social->opengraph;
+    my $schema = $social->create->schema
 
-	my $twitter->create('summary' | 'featured_image' | 'player' | 'app');
-	
-	# Alternatively call a card directly
-	my $summary_card = $meta_tags->twitter->create_summary;
-	
-	....
-	# You then need to insert these meta tags in the head of your html, 
-	# one way of implementing this if you are using Catalyst and Template Toolkit would be ..
-	# controller 
-	$c->stash->{meta_tags} = $meta_tags;
-	# template
-	[% meta_tags | html %]
+    my $twitter->create('summary' | 'featured_image' | 'player' | 'app');
+    
+    # Alternatively call a card directly
+    my $summary_card = $meta_tags->twitter->create_summary;
+    
+    ....
+    # You then need to insert these meta tags in the head of your html, 
+    # one way of implementing this if you are using Catalyst and Template Toolkit would be ..
+    
+    # controller 
+    $c->stash->{meta_tags} = $meta_tags;
+    
+    # template
+    [% meta_tags | html %]
 
 =head1 SUBROUTINES/METHODS
 
@@ -226,103 +226,111 @@ This module currently allows you to create the following cards:
 
 Returns an instance of this class. Requires C<$url> as an argument;
 
-	my $social = URL::Social->new(
-		card => '...',  	* card type - currently either summary or featured_image
-		site => '',	 		* twitter site - @twitter_handle 
-		site_name => '',	* sites name - Example Business
-		title => '',		* card title - title of the card 
-		description => '',	* description - content of the card
-		image => '',		* attached image - url http/www.someurl.com/test.jpg
-		url => '',			* url where the content is hosted, or url to some completly randon html page
-		... => '',
-		... => '',
-	);
+    my $social = URL::Social->new(
+        card => '...',          # OPTIONAL - if you always want the same card type you can set it  	
+        site => '',	 	# The Twitter @username the card should be attributed to. Required for Twitter Card analytics. 
+        site_name => '',	# This is Used by Facebook, you can just set it as your organisations name.
+        title => '',		# The title of your content as it should appear in the card 
+        description => '',	# A description of the content in a maximum of 200 characters
+        image => '',	        # A URL to a unique image representing the content of the page
+        url => '',              # OPTIONAL OPENGRAPH - allows you to specify an alternative url link you want the reader to be redirected 
+        ... => '',
+        ... => '',
+    );
 
 =cut
 
 =head2 Summary Card
 
-	,-----------------------------------,
-	|   TITLE                 *-------* |
-	|                         |       | |
-	|   DESCRIPTION           |       | |
-	|                         *-------* |
-	*-----------------------------------*
+The Summary Card can be used for many kinds of web content, from blog posts and news articles, to products and restaurants. 
+It is designed to give the reader a preview of the content before clicking through to your website.
+
+    ,-----------------------------------,
+    |   TITLE                 *-------* |
+    |                         |       | |
+    |   DESCRIPTION           |       | |
+    |                         *-------* |
+    *-----------------------------------*
 
 Returns an instance for the summary card:
 	
-	$meta->create('summary');
-	# call meta provider specifically
-	$card->twitter->create_summary;
-	$card->opengraph->create_thumbnail;
-	$card->schema->create_article;
+    $meta->create('summary');
+    # call meta provider specifically
+    $card->twitter->create_summary;
+    $card->opengraph->create_thumbnail;
+    $card->schema->create_article;
 
 fields required:
 
-	* card   
-	* site_name - OpenGraph
-	* site - Twitter Site
-	* title
-	* description
-	* image
+    * card   
+    * site_name - OpenGraph
+    * site - Twitter Site
+    * title
+    * description
+    * image
 
 =head2 Featured Image Card
 
-	,-----------------------------------,
-	| *-------------------------------* |
-	| |                               | |
-	| |                               | |
-	| |                               | |
-	| |                               | |
-	| |                               | |
-	| |                               | |
-	| *-------------------------------* |
-	|  TITLE                            |
-	|  DESCRIPTION                      |
-	*-----------------------------------*
+The Featured Image Card features a large, full-width prominent image. 
+It is designed to give the reader a rich photo experience, clicking on the image brings the user to your website.
+
+    ,-----------------------------------,
+    | *-------------------------------* |
+    | |                               | |
+    | |                               | |
+    | |                               | |
+    | |                               | |
+    | |                               | |
+    | |                               | |
+    | *-------------------------------* |
+    |  TITLE                            |
+    |  DESCRIPTION                      |
+    *-----------------------------------*
 
 Returns an instance for the featured image card:
 
-	$card->create('featured_image');	
-	# call meta provider specifically
-	$card->twitter->create_featured_image;
-	$card->opengraph->create_article;
-	$card->schema->create_offer;
+    $card->create('featured_image');	
+    # call meta provider specifically
+    $card->twitter->create_featured_image;
+    $card->opengraph->create_article;
+    $card->schema->create_offer;
 
 Fields Required:
 
-	* card - Twitter
-	* site - Twitter
-	* site_name  - Open Graph
-	* creator - Twitter
-	* title
-	* image
-	* url - Open Graph
+    * card - Twitter
+    * site - Twitter
+    * site_name  - Open Graph
+    * creator - Twitter
+    * title
+    * image
+    * url - Open Graph
 
 =cut
 
 =head2 Player Card
 
-	,-----------------------------------,
-	| Title	                            |	
-	| link	 			   				|
-	| *-------------------------------* |
-	| |                               | |
-	| |                               | |
-	| |                               | |
-	| |            <play>             | |
-	| |                               | |
-	| |                               | |
-	| *-------------------------------* |
-	*-----------------------------------*
+The Player Card allows you to share Video clips and audio stream.
+
+    ,-----------------------------------,
+    | Title                             |	
+    | link   				|
+    | *-------------------------------* |
+    | |                               | |
+    | |                               | |
+    | |                               | |
+    | |            <play>             | |
+    | |                               | |
+    | |                               | |
+    | *-------------------------------* |
+    *-----------------------------------*
 
 Returns an instance for the player card:
 
-	$card->create('player');	
-	# call meta provider specifically
-	$card->twitter->create_player;
-	$card->opengraph->create_video;
-	$card->schema->create_video;
+    $card->create('player');	
+    # call meta provider specifically
+    $card->twitter->create_player;
+    $card->opengraph->create_video;
+    $card->schema->create_video;
 
 Fields Required:
  
@@ -330,56 +338,60 @@ Fields Required:
     * title 
     * description 
     * image 
-    * player 
-    * player_width 
-    * player_height
+    * player            # HTTPS URL to iframe player. This must be a HTTPS URL which does not generate active mixed content warnings in a web browser
+    * player_width      # Width of IFRAME specified in twitter:player in pixels
+    * player_height     # Height of IFRAME specified in twitter:player in pixels
+
+* image to be displayed in place of the player on platforms that don’t support iframes or inline players. You should make this image the same dimensions
+as your player. Images with fewer than 68,600 pixels (a 262x262 square image, or a 350x196 16:9 image) will cause the player card not to render. 
+Image must be less than 1MB in size * 
 
 =cut
 
 =head2 App Card
 
-	,-----------------------------------,
-	|   APP NAME              *-------* |
-	|   APP INFO              |  app  | |
-	|                         | image | |
-	|   PRICE                 *-------* |
-	|   DESCRIPTION                     |
-	*-----------------------------------*
+The App Card is a great way to represent mobile applications on Social Media Platforms and to drive installs. 
+
+    ,-----------------------------------,
+    |   APP NAME              *-------* |
+    |   APP INFO              |  app  | |
+    |                         | image | |
+    |                         *-------* |
+    |   DESCRIPTION                     |
+    *-----------------------------------*
 
 Return an instance for the provider specific app card:
 
-	$card->create('app);	
-	# call meta provider specifically
-	$card->twitter->create_app;
-	$card->opengraph->create_product;
-	$card->schema->create_software_application;
+    $card->create('app);	
+    # call meta provider specifically
+    $card->twitter->create_app;
+    $card->opengraph->create_product;
+    $card->schema->create_software_application;
 
 Fields Required
 
-	* site
-	* title
-	* description
-	* operatingSystem
-	* app_country
-	* app_name
-	* app_id
-	* app_url
-
-price and app info pulled from the app stores?
+    * site
+    * title
+    * description
+    * operatingSystem   # IOS or ANDROID
+    * app_country       # UK/US ect
+    * app_name          # The applications name
+    * app_id            # String value, and should be the numeric representation of your app ID in the App Store (.i.e. “307234931”)
+    * app_url           # Application store url - direct link to App store page
 
 =cut
 
 =head2 create
 
 Create the Meta Tags - this returns the meta information for all the providers:
-	
-	* Twitter
-	* OpenGraph
-	* Google
+    
+    * Twitter
+    * OpenGraph
+    * Google
 	
 You just need to specify the card type on create
 
-	$social->create('summary | featured_image | app | player');
+    $social->create('summary | featured_image | app | player');
 
 =cut
 
@@ -387,9 +399,9 @@ You just need to specify the card type on create
 
 Returns a list of fields that are required to build the meta tags
 
-	$social = HTML->SocialMeta->new();
-	# @fields = qw{}
-	my @fields = $social->required_fields('summary');
+    $social = HTML->SocialMeta->new();
+    # @fields = qw{}
+    my @fields = $social->required_fields('summary');
 
 =cut
 
