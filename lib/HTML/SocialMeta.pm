@@ -36,7 +36,7 @@ has 'opengraph' => (
 has 'schema' => (
     isa        => 'HTML::SocialMeta::Schema',
     is         => 'ro',
-    lazy_build => 1,
+    lazy       => 1,
     builder    => 'build_schema',
 );
 

@@ -14,23 +14,27 @@ has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'content' );
 has 'item_type' => ( isa => 'Str', is => 'rw', required => 1, default => q{} );
 
-sub card_options {
-    return (
-        summary        => q(create_article),
-        featured_image => q(create_offer),
-        player         => q(create_video),
-        app            => q(create_software_application),
-    );
-}
+has '+card_options' => (
+	default => sub {
+		return {
+			summary        => q(create_article),
+			featured_image => q(create_offer),
+			player         => q(create_video),
+			app            => q(create_software_application),
+		};
+	},
+);
 
-sub build_fields {
-    return (
-        article => [qw(name description image)],
-        offer   => [qw(name description image)],
-        video => [qw(name description image player player_width player_height)],
-        software_application => [qw(name description image operatingSystem url)]
-    );
-}
+has '+build_fields' => (
+	default => sub {
+		return {
+			article => [qw(name description image)],
+			offer   => [qw(name description image)],
+			video => [qw(name description image player player_width player_height)],
+			software_application => [qw(name description image operatingSystem url)]
+		};
+	},
+);
 
 sub create_article {
     my ($self) = @_;

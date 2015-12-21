@@ -14,26 +14,30 @@ has 'meta_attribute' =>
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'twitter' );
 
-sub card_options {
-    return (
-        summary        => q(create_summary),
-        featured_image => q(create_summary_large_image),
-        app            => q(create_app),
-        player         => q(create_player),
-    );
-}
+has '+card_options' => (
+	default => sub {
+		return {
+			summary        => q(create_summary),
+			featured_image => q(create_summary_large_image),
+			app            => q(create_app),
+			player         => q(create_player),
+		};
+	},
+);
 
-sub build_fields {
-    return (
-        summary             => [qw(card site title description image)],
-        summary_large_image => [qw(card site title description image)],
-        app =>
-          [ qw(card site description app_country app_name app_id app_url) ],
-        player => [
-            qw(card site title description image player player_width player_height)
-        ],
-    );
-}
+has '+build_fields' => (
+	default => sub {
+		return {
+			summary             => [qw(card site title description image)],
+			summary_large_image => [qw(card site title description image)],
+			app =>
+			  [ qw(card site description app_country app_name app_id app_url) ],
+			player => [
+				qw(card site title description image player player_width player_height)
+			],
+		};
+	},
+);
 
 sub create_summary {
     my ($self) = @_;

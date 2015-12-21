@@ -13,25 +13,29 @@ has 'meta_attribute' =>
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'og' );
 
-sub card_options {
-    return (
-        summary        => q(create_thumbnail),
-        featured_image => q(create_article),
-        player         => q(create_video),
-        app            => q(create_product),
-    );
-}
+has '+card_options' => (
+    default => sub {
+        return {
+            summary        => q(create_thumbnail),
+            featured_image => q(create_article),
+            player         => q(create_video),
+            app            => q(create_product),
+        };
+    },
+);
 
-sub build_fields {
-    return (
-        thumbnail => [qw(type title description url image site_name)],
-        article   => [qw(type title description url image site_name)],
-        video     => [
-            qw(type site_name url title image description player player_width player_height)
-        ],
-        product => [qw(type title image description url)]
-    );
-}
+has '+build_fields' => (
+    default => sub {
+        return {
+            thumbnail => [qw(type title description url image site_name)],
+            article   => [qw(type title description url image site_name)],
+            video     => [
+                qw(type site_name url title image description player player_width player_height)
+            ],
+            product => [qw(type title image description url)]
+        };
+    },
+);
 
 sub create_thumbnail {
     my ($self) = @_;
