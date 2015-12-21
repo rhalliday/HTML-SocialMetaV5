@@ -342,9 +342,9 @@ Fields Required:
     * player_width      # Width of IFRAME specified in twitter:player in pixels
     * player_height     # Height of IFRAME specified in twitter:player in pixels
 
-* image to be displayed in place of the player on platforms that don’t support iframes or inline players. You should make this image the same dimensions
-as your player. Images with fewer than 68,600 pixels (a 262x262 square image, or a 350x196 16:9 image) will cause the player card not to render. 
-Image must be less than 1MB in size * 
+image to be displayed in place of the player on platforms that does not support iframes or inline players. You should make this image the same dimensions
+as your player. Images with fewer than 68,600 pixels (a 262 x 262 square image, or a 350 x 196 16:9 image) will cause the player card not to render. 
+Image must be less than 1MB in size 
 
 =cut
 
@@ -376,7 +376,7 @@ Fields Required
     * operatingSystem   # IOS or ANDROID
     * app_country       # UK/US ect
     * app_name          # The applications name
-    * app_id            # String value, and should be the numeric representation of your app ID in the App Store (.i.e. “307234931”)
+    * app_id            # String value, and should be the numeric representation of your app ID in the App Store (.i.e. 307234931)
     * app_url           # Application store url - direct link to App store page
 
 =cut
@@ -429,7 +429,7 @@ B. Facebook Debugger
 
 https://developers.facebook.com/tools/debug
 
-You don't need prior approval for your meta information to show on Facebook, 
+You do not need prior approval for your meta information to show on Facebook, 
 but the debugging tool they offer gives you a wealth of information about all your 
 tags and can also analyze your Twitter tags.
 
@@ -489,5 +489,6 @@ YOUR LOCAL LAW. UNLESS REQUIRED BY LAW, NO COPYRIGHT HOLDER OR
 CONTRIBUTOR WILL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, OR
 CONSEQUENTIAL DAMAGES ARISING IN ANY WAY OUT OF THE USE OF THE PACKAGE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 
 
