@@ -7,7 +7,7 @@ use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 use HTML::SocialMeta::Schema;
 
-our $VERSION = '0.2';
+our $VERSION = '0.2_1';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
