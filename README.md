@@ -6,45 +6,6 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 Version 0.2
 
-# DESCRIPTION
-
-This module makes generates social meta tags.
-
-i.e  $social->create('summary') will generate:
-
-    <meta itemprop="article" itemscope itemtype="http://schema.org/Article" />
-    <meta itemprop="name" content="You can have any title you wish here"/>
-    <meta itemprop="description" content="Description goes here may have to do a little validation"/>
-    <meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
-    <meta name="twitter:card" content="summary"/>
-    <meta name="twitter:site" content="@example_twitter"/>
-    <meta name="twitter:title" content="You can have any title you wish here"/>
-    <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
-    <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
-    <meta property="og:type" content="thumbnail"/>
-    <meta property="og:title" content="You can have any title you wish here"/>
-    <meta property="og:description" content="Description goes here may have to do a little validation"/>
-    <meta property="og:url" content="www.someurl.com"/>
-    <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
-    <meta property="og:site_name" content="Example Site, anything"/>'
-
-It allows you to optimize sharing on several social media platforms such as Twitter, Facebook, Google+ 
-and Pinerest by defining exactly how titles, descriptions, images and more appear in social streams.
-
-It generates all the required META data for the following Providers:
-
-    * Twitter
-    * OpenGraph
-    * Schema.org
-
-This module currently allows you to generate the following meta cards:
-
-    $social->create()  $twitter->create_       $opengraph->create_      $schema->create_
-    summary            summary                 thumbnail                article
-    featured_image     summary_large_image     article                  offer 
-    player             player                  video                    video
-    app                app                     product                  software_aplication                 
-
 # SYNOPSIS
 
     use HTML::SocialMeta;
@@ -83,23 +44,110 @@ This module currently allows you to generate the following meta cards:
     # template
     [% meta_tags | html %]
 
+# DESCRIPTION
+
+This module generates social meta tags.
+
+i.e  $social->create('summary') will generate:
+
+    <meta itemprop="article" itemscope itemtype="http://schema.org/Article" />
+    <meta itemprop="name" content="You can have any title you wish here"/>
+    <meta itemprop="description" content="Description goes here may have to do a little validation"/>
+    <meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@example_twitter"/>
+    <meta name="twitter:title" content="You can have any title you wish here"/>
+    <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+    <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>
+    <meta property="og:type" content="thumbnail"/>
+    <meta property="og:title" content="You can have any title you wish here"/>
+    <meta property="og:description" content="Description goes here may have to do a little validation"/>
+    <meta property="og:url" content="www.someurl.com"/>
+    <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
+    <meta property="og:site_name" content="Example Site, anything"/>'
+
+It allows you to optimize sharing on several social media platforms such as Twitter, Facebook, Google+ 
+and Pinerest by defining exactly how titles, descriptions, images and more appear in social streams.
+
+It generates all the required META data for the following Providers:
+
+    * Twitter
+    * OpenGraph
+    * Schema.org
+
+This module currently allows you to generate the following meta cards:
+
+    $social->create()  $twitter->create_       $opengraph->create_      $schema->create_
+    summary            summary                 thumbnail                article
+    featured_image     summary_large_image     article                  offer 
+    player             player                  video                    video
+    app                app                     product                  software_aplication                 
+
 # SUBROUTINES/METHODS
 
-## new
+## Constructor
 
 Returns an instance of this class. Requires `$url` as an argument;
 
-    my $social = URL::Social->new(
-        card => '...',          # OPTIONAL - if you always want the same card type you can set it       
-        site => '',             # The Twitter @username the card should be attributed to. Required for Twitter Card analytics. 
-        site_name => '',        # This is Used by Facebook, you can just set it as your organisations name.
-        title => '',            # The title of your content as it should appear in the card 
-        description => '',      # A description of the content in a maximum of 200 characters
-        image => '',            # A URL to a unique image representing the content of the page
-        url => '',              # OPTIONAL OPENGRAPH - allows you to specify an alternative url link you want the reader to be redirected 
-        ... => '',
-        ... => '',
-    );
+- card
+
+    OPTIONAL - if you always want the same card type you can set it 
+
+- site
+
+    The Twitter @username the card should be attributed to. Required for Twitter Card analytics. 
+
+- site name
+
+    This is Used by Facebook, you can just set it as your organisations name.
+
+- title
+
+    The title of your content as it should appear in the card 
+
+- description
+
+    A description of the content in a maximum of 200 characters
+
+- image
+
+    A URL to a unique image representing the content of the page
+
+- url
+
+    OPTIONAL OPENGRAPH - allows you to specify an alternative url link you want the reader to be redirected 
+
+- player
+
+    HTTPS URL to iframe player. This must be a HTTPS URL which does not generate active mixed content warnings in a web browser
+
+- player\_width
+
+    Width of IFRAME specified in twitter:player in pixels
+
+- player\_height
+
+    Height of IFRAME specified in twitter:player in pixels
+
+- operating\_system
+
+    IOS or Android 
+
+- app\_country      
+
+    UK/US ect
+
+- app\_name   
+
+    The applications name
+
+- app\_id 
+
+    String value, and should be the numeric representation of your app ID in the App Store (.i.e. 307234931)
+
+- app\_url 
+
+    Application store url - direct link to App store page
 
 ## Summary Card
 
@@ -197,9 +245,9 @@ Fields Required:
     * title 
     * description 
     * image 
-    * player            # HTTPS URL to iframe player. This must be a HTTPS URL which does not generate active mixed content warnings in a web browser
-    * player_width      # Width of IFRAME specified in twitter:player in pixels
-    * player_height     # Height of IFRAME specified in twitter:player in pixels
+    * player                
+    * player_width           
+    * player_height     
 
 image to be displayed in place of the player on platforms that does not support iframes or inline players. You should make this image the same dimensions
 as your player. Images with fewer than 68,600 pixels (a 262 x 262 square image, or a 350 x 196 16:9 image) will cause the player card not to render. 
@@ -230,11 +278,11 @@ Fields Required
     * site
     * title
     * description
-    * operatingSystem   # IOS or ANDROID
-    * app_country       # UK/US ect
-    * app_name          # The applications name
-    * app_id            # String value, and should be the numeric representation of your app ID in the App Store (.i.e. 307234931)
-    * app_url           # Application store url - direct link to App store page
+    * operatingSystem   
+    * app_country      
+    * app_name        
+    * app_id           
+    * app_url           
 
 ## create
 
