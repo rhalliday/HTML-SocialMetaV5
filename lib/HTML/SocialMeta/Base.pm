@@ -13,7 +13,7 @@ has [qw(card_type card type name url)] => (
 );
 
 has [
-    qw(site site_name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width)
+    qw(site fb_app_id site_name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width)
   ] => (
     is      => 'ro',
     isa     => 'Str',
@@ -25,7 +25,7 @@ has [
 has [qw(card_options build_fields)] => (
     is      => 'ro',
     isa     => 'HashRef',
-	default => sub{ {} },
+    default => sub { {} },
 );
 
 sub create {
@@ -64,7 +64,10 @@ sub build_meta_tags {
 sub required_fields {
     my ( $self, $field ) = @_;
 
-    return exists $self->build_fields->{$field} ? @{ $self->build_fields->{$field} } : ();
+    return
+      exists $self->build_fields->{$field}
+      ? @{ $self->build_fields->{$field} }
+      : ();
 }
 
 sub _validate_field_value {
@@ -80,31 +83,32 @@ sub _validate_field_value {
 sub _generate_meta_tag {
     my ( $self, $field ) = @_;
 
-	# fields that don't start with app or player generate a single tag
-    return $self->_build_field($field) if $field !~ m{^(app|player)}xms;
+    # fields that don't start with app or player generate a single tag
+    return $self->_build_field( { field => $field } )
+      if $field !~ m{^(app|player|fb)}xms;
 
-	# fields that start with app or player generate multiple tags
+    use Data::Dumper;
+
+    # fields that start with app or player generate multiple tags
     my @tags = ();
 
     for ( @{ $self->_convert_field($field) } ) {
-        push @tags, $self->_build_field( $field, $_ );
+        push @tags, $self->_build_field( { field => $field, %{$_} } );
     }
 
     return @tags;
 }
 
 sub _build_field {
-    my ( $self, $field, $field_type ) = @_;
+    my ( $self, $args ) = @_;
 
-    $field_type ||= $field;
+    my $field_type = $args->{field_type} || $args->{field};
+    my $meta_namespace =
+      $args->{ignore_meta_namespace} || $self->meta_namespace;
+    my $field = $args->{field};
 
-    return
-        q{<meta }
-      . $self->meta_attribute . q{="}
-      . $self->meta_namespace . q{:}
-      . $field_type
-      . q{" content="}
-      . $self->$field . q{"/>};
+    return sprintf q{<meta %s="%s:%s" content="%s"/>},
+      $self->meta_attribute, $meta_namespace, $field_type, $self->$field;
 }
 
 sub _convert_field {
@@ -180,7 +184,6 @@ Version 0.2
     # returns meta tags specificly for a single provider
     my $twitter_tags = $social->twitter;
     my $opengraph_tags = $social->opengraph;
-    my $schema = $social->create->schema
 
     my $twitter->create('summary' | 'featured_image' | 'player' | 'app');
 
@@ -191,11 +194,11 @@ Version 0.2
 
 Generates meta tags for all providers, takes a card_type and converts it into a provider specific card
 
-                        twitter                 opengraph          schema
-    * summary           summary                 thumbnail          article
-    * featured_image    summary_large_image     article            offer 
-    * player            player                  video              video
-    * app               app                     product             ***                 
+                        twitter                 opengraph          
+    * summary           summary                 thumbnail         
+    * featured_image    summary_large_image     article           
+    * player            player                  video           
+    * app               app                     product                         
 
 =cut
 

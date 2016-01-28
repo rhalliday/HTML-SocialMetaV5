@@ -23,11 +23,11 @@ throws_ok{$bad_meta_tags->twitter->create_summary} qr/you have not set this fiel
 throws_ok{$bad_meta_tags->opengraph->create_article} qr/you have not set this field value title/;
 
 use Data::Dumper;
-my $social =HTML::SocialMeta->new();
+my $social = HTML::SocialMeta->new();
 my @social_required_fields = $social->required_fields('summary');
 
-my @expected_fields = ( qw{name description image card site title type url site_name} );
-my @expected_player_fields = ( qw{name description image card site title player player_width player_height type site_name url} );
+my @expected_fields = ( qw{name description image card site title type site_name fb_app_id} );
+my @expected_player_fields = ( qw{name description image card site title player player_width player_height type site_name fb_app_id} );
 
 is(@social_required_fields, @expected_fields);
 

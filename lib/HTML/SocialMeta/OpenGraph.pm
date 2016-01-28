@@ -13,6 +13,8 @@ has 'meta_attribute' =>
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'og' );
 
+has 'fb_namespace' => ( isa => 'Str', is => 'rw', lazy => 1, default => '' );
+
 has '+card_options' => (
     default => sub {
         return {
@@ -27,12 +29,14 @@ has '+card_options' => (
 has '+build_fields' => (
     default => sub {
         return {
-            thumbnail => [qw(type title description url image site_name)],
-            article   => [qw(type title description url image site_name)],
-            video     => [
-                qw(type site_name url title image description player player_width player_height)
+            thumbnail =>
+              [qw(type title description url image site_name fb_app_id)],
+            article =>
+              [qw(type title description url image site_name fb_app_id)],
+            video => [
+                qw(type site_name url title image description player player_width player_height fb_app_id)
             ],
-            product => [qw(type title image description url)]
+            product => [qw(type title image description url fb_app_id)]
         };
     },
 );
@@ -72,12 +76,20 @@ sub create_product {
 sub provider_convert {
     my ( $self, $field ) = @_;
 
+    if ( $field =~ m{^fb:}xms ) {
+        $field =~ s{^fb:}{}xms;
+        return [ { field_type => $field, ignore_meta_namespace => 'fb' } ];
+    }
+
     $field =~ s{^player}{video}xms;
 
-    return [ $field . ':url', $field . ':secure_url' ]
+    return [
+        { field_type => $field . ':url' },
+        { field_type => $field . ':secure_url' }
+      ]
       if $field =~ m{^video$}xms;
 
-    return [$field];
+    return [ { field_type => $field } ];
 }
 
 #

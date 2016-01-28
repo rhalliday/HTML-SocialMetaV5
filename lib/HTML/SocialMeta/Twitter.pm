@@ -15,28 +15,28 @@ has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'twitter' );
 
 has '+card_options' => (
-	default => sub {
-		return {
-			summary        => q(create_summary),
-			featured_image => q(create_summary_large_image),
-			app            => q(create_app),
-			player         => q(create_player),
-		};
-	},
+    default => sub {
+        return {
+            summary        => q(create_summary),
+            featured_image => q(create_summary_large_image),
+            app            => q(create_app),
+            player         => q(create_player),
+        };
+    },
 );
 
 has '+build_fields' => (
-	default => sub {
-		return {
-			summary             => [qw(card site title description image)],
-			summary_large_image => [qw(card site title description image)],
-			app =>
-			  [ qw(card site description app_country app_name app_id app_url) ],
-			player => [
-				qw(card site title description image player player_width player_height)
-			],
-		};
-	},
+    default => sub {
+        return {
+            summary             => [qw(card site title description image)],
+            summary_large_image => [qw(card site title description image)],
+            app =>
+              [qw(card site description app_country app_name app_id app_url)],
+            player => [
+                qw(card site title description image player player_width player_height)
+            ],
+        };
+    },
 );
 
 sub create_summary {
@@ -74,13 +74,16 @@ sub create_player {
 sub provider_convert {
     my ( $self, $field ) = @_;
 
-    return [$field]
+    return [ { field_type => $field } ]
       if $field !~ m{^app}xms || $field =~ m{country$}xms;
 
-    return [ $field . ':googleplay' ]
+    return [ { field_type => $field . ':googleplay' } ]
       if $self->operatingSystem eq q{ANDROID};
 
-    return [ $field . ':iphone', $field . ':ipad' ]
+    return [
+        { field_type => $field . ':iphone' },
+        { field_type => $field . ':ipad' }
+      ]
       if $self->operatingSystem eq q{IOS};
 
     return croak 'We currently do not support this APP type';

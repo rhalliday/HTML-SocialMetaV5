@@ -17,16 +17,13 @@ my $meta_tags = HTML::SocialMeta->new(
     player => 'www.somevideourl.com/url/url',
     player_width => '500',
     player_height => '500',
+    fb_app_id	=> '1232342342354',
 );
 
 # Create - Valid Meta_Tags
 my $tags = $meta_tags->create;
 
-my $test_create_all = '<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />
-<meta itemprop="name" content="You can have any title you wish here"/>
-<meta itemprop="description" content="Description goes here may have to do a little validation"/>
-<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
-<meta name="twitter:card" content="summary"/>
+my $test_create_all = '<meta name="twitter:card" content="summary"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:title" content="You can have any title you wish here"/>
 <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
@@ -36,7 +33,8 @@ my $test_create_all = '<meta itemprop="article" itemscope itemtype="http://schem
 <meta property="og:description" content="Description goes here may have to do a little validation"/>
 <meta property="og:url" content="www.someurl.com"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
-<meta property="og:site_name" content="Example Site, anything"/>';
+<meta property="og:site_name" content="Example Site, anything"/>
+<meta property="fb:app:id" content="1232342342354"/>';
 
 is($tags, $test_create_all);
 
@@ -64,11 +62,7 @@ is($generic_twitter_create, $test_twitter);
 
 my $create_featured = $meta_tags->create('featured_image');
 
-my $test_featured_all = '<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />
-<meta itemprop="name" content="You can have any title you wish here"/>
-<meta itemprop="description" content="Description goes here may have to do a little validation"/>
-<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
-<meta name="twitter:card" content="summary_large_image"/>
+my $test_featured_all = '<meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:title" content="You can have any title you wish here"/>
 <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
@@ -78,22 +72,14 @@ my $test_featured_all = '<meta itemprop="offer" itemscope itemtype="http://schem
 <meta property="og:description" content="Description goes here may have to do a little validation"/>
 <meta property="og:url" content="www.someurl.com"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
-<meta property="og:site_name" content="Example Site, anything"/>';
+<meta property="og:site_name" content="Example Site, anything"/>
+<meta property="fb:app:id" content="1232342342354"/>';
 
 is($create_featured, $test_featured_all);
 
 my $create_player = $meta_tags->create('player');
 
-my $test_player_card = '<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />
-<meta itemprop="thumbnailUrl" content="www.urltoimage.com/blah.jpg"/>
-<meta itemprop="name" content="You can have any title you wish here"/>
-<meta itemprop="description" content="Description goes here may have to do a little validation"/>
-<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
-<meta itemprop="embedURL" content="www.somevideourl.com/url/url"/>
-<meta itemprop="contentURL" content="www.somevideourl.com/url/url"/>
-<meta itemprop="width" content="500"/>
-<meta itemprop="height" content="500"/>
-<meta name="twitter:card" content="player"/>
+my $test_player_card = '<meta name="twitter:card" content="player"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:title" content="You can have any title you wish here"/>
 <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
@@ -110,7 +96,9 @@ my $test_player_card = '<meta itemprop="video" itemscope itemtype="http://schema
 <meta property="og:video:url" content="www.somevideourl.com/url/url"/>
 <meta property="og:video:secure_url" content="www.somevideourl.com/url/url"/>
 <meta property="og:video:width" content="500"/>
-<meta property="og:video:height" content="500"/>';
+<meta property="og:video:height" content="500"/>
+<meta property="fb:app:id" content="1232342342354"/>';
+
 
 is($create_player, $test_player_card);
 
@@ -128,16 +116,10 @@ my $android_app_tags = HTML::SocialMeta->new(
     app_name => 'tester twitter',
     app_id => '1232', 
     app_url => 'app.app.com/app',
+    fb_app_id	=> '1232342342354',
 );
 
-my $android_test_tags = q(<meta itemprop="software_application" itemscope itemtype="http://schema.org/SoftwareApplication" />
-<link itemprop="applicationCategory" href="http://schema.org/GameApplication"/>
-<meta itemprop="name" content="You can have any title you wish here"/>
-<meta itemprop="description" content="Description goes here may have to do a little validation"/>
-<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
-<meta itemprop="operatingSystem" content="ANDROID"/>
-<meta itemprop="url" content="app.app.com/app"/>
-<meta name="twitter:card" content="app"/>
+my $android_test_tags = q(<meta name="twitter:card" content="app"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
 <meta name="twitter:app:country" content="US"/>
@@ -148,7 +130,8 @@ my $android_test_tags = q(<meta itemprop="software_application" itemscope itemty
 <meta property="og:title" content="You can have any title you wish here"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:description" content="Description goes here may have to do a little validation"/>
-<meta property="og:url" content="app.app.com/app"/>);
+<meta property="og:url" content="app.app.com/app"/>
+<meta property="fb:app:id" content="1232342342354"/>);
 
 is($android_app_tags->create('app'), $android_test_tags);
 
@@ -167,16 +150,10 @@ my $ios_app_tags = HTML::SocialMeta->new(
     app_name => 'tester twitter',
     app_id => '1232', 
     app_url => 'app.app.com/app',
+    fb_app_id	=> '1232342342354',
 );
 
-my $ios_test_tags = q(<meta itemprop="software_application" itemscope itemtype="http://schema.org/SoftwareApplication" />
-<link itemprop="applicationCategory" href="http://schema.org/GameApplication"/>
-<meta itemprop="name" content="You can have any title you wish here"/>
-<meta itemprop="description" content="Description goes here may have to do a little validation"/>
-<meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
-<meta itemprop="operatingSystem" content="IOS"/>
-<meta itemprop="url" content="app.app.com/app"/>
-<meta name="twitter:card" content="app"/>
+my $ios_test_tags = q(<meta name="twitter:card" content="app"/>
 <meta name="twitter:site" content="@example_twitter"/>
 <meta name="twitter:description" content="Description goes here may have to do a little validation"/>
 <meta name="twitter:app:country" content="US"/>
@@ -190,7 +167,8 @@ my $ios_test_tags = q(<meta itemprop="software_application" itemscope itemtype="
 <meta property="og:title" content="You can have any title you wish here"/>
 <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
 <meta property="og:description" content="Description goes here may have to do a little validation"/>
-<meta property="og:url" content="app.app.com/app"/>);
+<meta property="og:url" content="app.app.com/app"/>
+<meta property="fb:app:id" content="1232342342354"/>);
 
 is($ios_app_tags->create('app'), $ios_test_tags);
 

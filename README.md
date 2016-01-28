@@ -16,6 +16,7 @@ Version 0.2
         title => '',
         description => '',
         image   => '',
+        fb_app_id => '',
         url  => '',  # optional
         ... => '',
         ... => '',
@@ -27,7 +28,6 @@ Version 0.2
     # returns meta tags specificly for a single provider
     my $twitter_tags = $social->twitter;
     my $opengraph_tags = $social->opengraph;
-    my $schema = $social->create->schema
 
     my $twitter->create('summary' | 'featured_image' | 'player' | 'app');
     
@@ -50,10 +50,6 @@ This module generates social meta tags.
 
 i.e  $social->create('summary') will generate:
 
-    <meta itemprop="article" itemscope itemtype="http://schema.org/Article" />
-    <meta itemprop="name" content="You can have any title you wish here"/>
-    <meta itemprop="description" content="Description goes here may have to do a little validation"/>
-    <meta itemprop="image" content="www.urltoimage.com/blah.jpg"/>
     <meta name="twitter:card" content="summary"/>
     <meta name="twitter:site" content="@example_twitter"/>
     <meta name="twitter:title" content="You can have any title you wish here"/>
@@ -64,7 +60,8 @@ i.e  $social->create('summary') will generate:
     <meta property="og:description" content="Description goes here may have to do a little validation"/>
     <meta property="og:url" content="www.someurl.com"/>
     <meta property="og:image" content="www.urltoimage.com/blah.jpg"/>
-    <meta property="og:site_name" content="Example Site, anything"/>'
+    <meta property="og:site_name" content="Example Site, anything"/>
+    <meta property="fb:app_id" content="123433223543"/>'
 
 It allows you to optimize sharing on several social media platforms such as Twitter, Facebook, Google+ 
 and Pinerest by defining exactly how titles, descriptions, images and more appear in social streams.
@@ -73,15 +70,14 @@ It generates all the required META data for the following Providers:
 
     * Twitter
     * OpenGraph
-    * Schema.org
 
 This module currently allows you to generate the following meta cards:
 
-    $social->create()  $twitter->create_       $opengraph->create_      $schema->create_
-    summary            summary                 thumbnail                article
-    featured_image     summary_large_image     article                  offer 
-    player             player                  video                    video
-    app                app                     product                  software_aplication                 
+    $social->create()  $twitter->create_       $opengraph->create_      
+    summary            summary                 thumbnail                
+    featured_image     summary_large_image     article                   
+    player             player                  video                    
+    app                app                     product                                   
 
 # SUBROUTINES/METHODS
 
@@ -149,6 +145,11 @@ Returns an instance of this class. Requires `$url` as an argument;
 
     Application store url - direct link to App store page
 
+- fb\_app\_id
+
+    This field is required to use social meta with facebook, you must register your website/app/company with facebook.
+    They will then provide you with a unique app\_id.
+
 ## Summary Card
 
 The Summary Card can be used for many kinds of web content, from blog posts and news articles, to products and restaurants. 
@@ -167,7 +168,6 @@ Returns an instance for the summary card:
     # call meta provider specifically
     $card->twitter->create_summary;
     $card->opengraph->create_thumbnail;
-    $card->schema->create_article;
 
 fields required:
 
@@ -202,7 +202,6 @@ Returns an instance for the featured image card:
     # call meta provider specifically
     $card->twitter->create_featured_image;
     $card->opengraph->create_article;
-    $card->schema->create_offer;
 
 Fields Required:
 
@@ -237,7 +236,6 @@ Returns an instance for the player card:
     # call meta provider specifically
     $card->twitter->create_player;
     $card->opengraph->create_video;
-    $card->schema->create_video;
 
 Fields Required:
 
@@ -271,7 +269,6 @@ Return an instance for the provider specific app card:
     # call meta provider specifically
     $card->twitter->create_app;
     $card->opengraph->create_product;
-    $card->schema->create_software_application;
 
 Fields Required
 
