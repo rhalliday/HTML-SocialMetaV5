@@ -85,7 +85,7 @@ sub _generate_meta_tag {
 
     # fields that don't start with app or player generate a single tag
     return $self->_build_field( { field => $field } )
-      if $field !~ m{^(app|player|fb)}xms;
+      if $field !~ m{(?:app|player|fb)}xms;
 
     # fields that start with app or player generate multiple tags
     my @tags = ();

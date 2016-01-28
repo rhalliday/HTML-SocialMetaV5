@@ -13,7 +13,7 @@ has 'meta_attribute' =>
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'og' );
 
-has 'fb_namespace' => ( isa => 'Str', is => 'rw', lazy => 1, default => '' );
+has 'fb_namespace' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 
 has '+card_options' => (
     default => sub {
