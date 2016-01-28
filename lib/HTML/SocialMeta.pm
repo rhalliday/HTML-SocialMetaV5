@@ -6,7 +6,7 @@ use List::MoreUtils qw(uniq);
 use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 
-our $VERSION = '0.2_2';
+our $VERSION = '0.3';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
@@ -114,7 +114,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.2
+Version 0.3
 
 =head1 SYNOPSIS
 

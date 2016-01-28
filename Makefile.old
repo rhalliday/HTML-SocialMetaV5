@@ -13,13 +13,13 @@
 
 #     ABSTRACT_FROM => q[lib/HTML/SocialMeta.pm]
 #     AUTHOR => [q[Robert Acock <ThisUsedToBeAnEmail@gmail.com>]]
-#     BUILD_REQUIRES => { Test::More=>q[0], Test::Exception=>q[0] }
+#     BUILD_REQUIRES => { Test::Exception=>q[0], Test::More=>q[0] }
 #     CONFIGURE_REQUIRES => { ExtUtils::MakeMaker=>q[0] }
 #     LICENSE => q[artistic_2]
 #     MIN_PERL_VERSION => q[5.006]
 #     NAME => q[HTML::SocialMeta]
 #     PL_FILES => {  }
-#     PREREQ_PM => { namespace::autoclean=>q[0.15], Test::More=>q[0], List::MoreUtils=>q[0.413], Moose=>q[2.0604], Test::Exception=>q[0] }
+#     PREREQ_PM => { namespace::autoclean=>q[0.15], Test::Exception=>q[0], Moose=>q[2.0604], Test::More=>q[0], List::MoreUtils=>q[0.413] }
 #     TEST_REQUIRES => {  }
 #     VERSION_FROM => q[lib/HTML/SocialMeta.pm]
 #     clean => { FILES=>q[HTML-SocialMeta-*] }
@@ -62,11 +62,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = HTML::SocialMeta
 NAME_SYM = HTML_SocialMeta
-VERSION = 0.2_1
+VERSION = 0.2_2
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_2_1
+VERSION_SYM = 0_2_2
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.2_1
+XS_VERSION = 0.2_2
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -169,7 +169,6 @@ MAN1PODS =
 MAN3PODS = lib/HTML/SocialMeta.pm \
 	lib/HTML/SocialMeta/Base.pm \
 	lib/HTML/SocialMeta/OpenGraph.pm \
-	lib/HTML/SocialMeta/Schema.pm \
 	lib/HTML/SocialMeta/Twitter.pm
 
 # Where is the Config information that we are using/depend on
@@ -195,20 +194,17 @@ PERL_ARCHIVE_AFTER =
 TO_INST_PM = lib/HTML/SocialMeta.pm \
 	lib/HTML/SocialMeta/Base.pm \
 	lib/HTML/SocialMeta/OpenGraph.pm \
-	lib/HTML/SocialMeta/Schema.pm \
 	lib/HTML/SocialMeta/Twitter.pm \
 	perltidy.pl
 
 PM_TO_BLIB = lib/HTML/SocialMeta/Twitter.pm \
 	blib/lib/HTML/SocialMeta/Twitter.pm \
-	perltidy.pl \
-	$(INST_LIB)/HTML/perltidy.pl \
 	lib/HTML/SocialMeta/OpenGraph.pm \
 	blib/lib/HTML/SocialMeta/OpenGraph.pm \
 	lib/HTML/SocialMeta.pm \
 	blib/lib/HTML/SocialMeta.pm \
-	lib/HTML/SocialMeta/Schema.pm \
-	blib/lib/HTML/SocialMeta/Schema.pm \
+	perltidy.pl \
+	$(INST_LIB)/HTML/perltidy.pl \
 	lib/HTML/SocialMeta/Base.pm \
 	blib/lib/HTML/SocialMeta/Base.pm
 
@@ -279,7 +275,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = HTML-SocialMeta
-DISTVNAME = HTML-SocialMeta-0.2_1
+DISTVNAME = HTML-SocialMeta-0.2_2
 
 
 # --- MakeMaker macro section:
@@ -432,17 +428,15 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all  \
-	lib/HTML/SocialMeta/OpenGraph.pm \
 	lib/HTML/SocialMeta.pm \
+	lib/HTML/SocialMeta/OpenGraph.pm \
 	lib/HTML/SocialMeta/Twitter.pm \
-	lib/HTML/SocialMeta/Base.pm \
-	lib/HTML/SocialMeta/Schema.pm
+	lib/HTML/SocialMeta/Base.pm
 	$(NOECHO) $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) \
-	  lib/HTML/SocialMeta/OpenGraph.pm $(INST_MAN3DIR)/HTML::SocialMeta::OpenGraph.$(MAN3EXT) \
 	  lib/HTML/SocialMeta.pm $(INST_MAN3DIR)/HTML::SocialMeta.$(MAN3EXT) \
+	  lib/HTML/SocialMeta/OpenGraph.pm $(INST_MAN3DIR)/HTML::SocialMeta::OpenGraph.$(MAN3EXT) \
 	  lib/HTML/SocialMeta/Twitter.pm $(INST_MAN3DIR)/HTML::SocialMeta::Twitter.$(MAN3EXT) \
-	  lib/HTML/SocialMeta/Base.pm $(INST_MAN3DIR)/HTML::SocialMeta::Base.$(MAN3EXT) \
-	  lib/HTML/SocialMeta/Schema.pm $(INST_MAN3DIR)/HTML::SocialMeta::Schema.$(MAN3EXT) 
+	  lib/HTML/SocialMeta/Base.pm $(INST_MAN3DIR)/HTML::SocialMeta::Base.$(MAN3EXT) 
 
 
 
@@ -469,24 +463,24 @@ clean_subdirs :
 
 clean :: clean_subdirs
 	- $(RM_F) \
-	  perlmain.c perl \
-	  core core.[0-9][0-9][0-9][0-9][0-9] \
-	  $(BASEEXT).exp core.[0-9] \
-	  mon.out pm_to_blib.ts \
-	  pm_to_blib $(BASEEXT).def \
-	  lib$(BASEEXT).def $(MAKE_APERL_FILE) \
-	  core.[0-9][0-9][0-9][0-9] core.[0-9][0-9][0-9] \
-	  $(BASEEXT).x *$(OBJ_EXT) \
-	  $(BOOTSTRAP) perl$(EXE_EXT) \
-	  core.*perl.*.? MYMETA.yml \
-	  tmon.out $(INST_ARCHAUTODIR)/extralibs.all \
-	  perl.exe core.[0-9][0-9] \
-	  *$(LIB_EXT) so_locations \
-	  blibdirs.ts *perl.core \
-	  MYMETA.json $(INST_ARCHAUTODIR)/extralibs.ld \
+	  *$(OBJ_EXT) $(INST_ARCHAUTODIR)/extralibs.all \
+	  core.[0-9][0-9] $(BASEEXT).x \
+	  $(MAKE_APERL_FILE) core \
+	  core.[0-9][0-9][0-9][0-9][0-9] $(BOOTSTRAP) \
+	  lib$(BASEEXT).def MYMETA.json \
+	  $(INST_ARCHAUTODIR)/extralibs.ld MYMETA.yml \
+	  *perl.core blibdirs.ts \
+	  *$(LIB_EXT) pm_to_blib \
+	  $(BASEEXT).exp tmon.out \
+	  perl.exe perl$(EXE_EXT) \
+	  core.[0-9][0-9][0-9] perlmain.c \
+	  perl core.[0-9] \
+	  so_locations $(BASEEXT).def \
+	  core.*perl.*.? mon.out \
+	  core.[0-9][0-9][0-9][0-9] pm_to_blib.ts \
 	  $(BASEEXT).bso 
 	- $(RM_RF) \
-	  blib HTML-SocialMeta-* 
+	  HTML-SocialMeta-* blib 
 	- $(MV) $(FIRST_MAKEFILE) $(MAKEFILE_OLD) $(DEV_NULL)
 
 
@@ -532,7 +526,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  Moose: '\''2.0604'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  namespace::autoclean: '\''0.15'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  perl: '\''5.006'\''' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version: 0.2_1' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version: 0.2_2' >> META_new.yml
 	$(NOECHO) $(ECHO) 'x_serialization_backend: '\''CPAN::Meta::YAML version 0.016'\''' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
 	$(NOECHO) $(ECHO) Generating META.json
@@ -579,7 +573,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
 	$(NOECHO) $(ECHO) '   "release_status" : "testing",' >> META_new.json
-	$(NOECHO) $(ECHO) '   "version" : "0.2_1",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "version" : "0.2_2",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "x_serialization_backend" : "JSON::PP version 2.27202"' >> META_new.json
 	$(NOECHO) $(ECHO) '}' >> META_new.json
 	-$(NOECHO) $(MV) META_new.json $(DISTVNAME)/META.json
@@ -881,9 +875,9 @@ ppd :
 	$(NOECHO) $(ECHO) '    <AUTHOR>Robert Acock &lt;ThisUsedToBeAnEmail@gmail.com&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <PERLCORE VERSION="5,006,0,0" />' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE VERSION="0.413" NAME="List::MoreUtils" />' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Moose::" VERSION="2.0604" />' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <REQUIRE NAME="namespace::autoclean" VERSION="0.15" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="List::MoreUtils" VERSION="0.413" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE VERSION="2.0604" NAME="Moose::" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE VERSION="0.15" NAME="namespace::autoclean" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="darwin-thread-multi-2level-5.18" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
@@ -895,10 +889,9 @@ ppd :
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
 	  lib/HTML/SocialMeta/Twitter.pm blib/lib/HTML/SocialMeta/Twitter.pm \
-	  perltidy.pl $(INST_LIB)/HTML/perltidy.pl \
 	  lib/HTML/SocialMeta/OpenGraph.pm blib/lib/HTML/SocialMeta/OpenGraph.pm \
 	  lib/HTML/SocialMeta.pm blib/lib/HTML/SocialMeta.pm \
-	  lib/HTML/SocialMeta/Schema.pm blib/lib/HTML/SocialMeta/Schema.pm \
+	  perltidy.pl $(INST_LIB)/HTML/perltidy.pl \
 	  lib/HTML/SocialMeta/Base.pm blib/lib/HTML/SocialMeta/Base.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 

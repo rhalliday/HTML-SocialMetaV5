@@ -157,7 +157,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.2
+Version 0.3
 
 =cut
 

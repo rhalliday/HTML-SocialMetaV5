@@ -145,7 +145,7 @@ Base class to create Twitter Cards
 
 =head1 VERSION
 
-Version 0.2
+Version 0.3
 
 =cut
 
