@@ -87,8 +87,6 @@ sub _generate_meta_tag {
     return $self->_build_field( { field => $field } )
       if $field !~ m{^(app|player|fb)}xms;
 
-    use Data::Dumper;
-
     # fields that start with app or player generate multiple tags
     my @tags = ();
 
