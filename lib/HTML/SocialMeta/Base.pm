@@ -13,7 +13,7 @@ has [qw(card_type card type name url)] => (
 );
 
 has [
-    qw(site fb_app_id site_name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width)
+    qw(site fb_app_id site_name name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width)
   ] => (
     is      => 'ro',
     isa     => 'Str',

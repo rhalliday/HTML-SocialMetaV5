@@ -5,12 +5,13 @@ use List::MoreUtils qw(uniq);
 
 use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
+use HTML::SocialMeta::RichSnippet;
 
 our $VERSION = '0.5';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
-    qw(card site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width fb_app_id)
+    qw(card name site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width fb_app_id)
   ] => (
     is      => 'ro',
     isa     => 'Str',
@@ -32,6 +33,13 @@ has 'opengraph' => (
     builder => 'build_opengraph',
 );
 
+has 'richsnippet' => (
+    isa     => 'HTML::SocialMeta::RichSnippet',
+    is      => 'ro',
+    lazy    => 1,
+    builder => 'build_richsnippet',
+);
+
 sub create {
     my ( $self, $card_type ) = @_;
 
@@ -40,7 +48,7 @@ sub create {
     $self->card_type($card_type);
 
     my @meta_tags =
-      map { $self->$_->create( $self->card_type ) } qw/twitter opengraph/;
+      map { $self->$_->create( $self->card_type ) } qw/twitter opengraph richsnippet/;
 
     return join "\n", @meta_tags;
 }
@@ -50,7 +58,7 @@ sub required_fields {
 
     my @meta_tags =
       map { $self->$_->required_fields( $self->$_->meta_option($card_type) ) }
-      qw/twitter opengraph/;
+      qw/twitter opengraph richsnippet/;
 
     my @required_fields = uniq(@meta_tags);
 
@@ -98,6 +106,27 @@ sub build_opengraph {
         fb_app_id       => $self->fb_app_id,
     );
 }
+
+sub build_richsnippet {
+    my $self = shift;
+
+    my $url = $self->app_url ? $self->app_url : $self->url;
+
+    return HTML::SocialMeta::RichSnippet->new(
+        card_type       => $self->card_type,
+        name            => $self->name,
+        description     => $self->description,
+        image           => $self->image,
+        url             => $url,
+        operatingSystem => $self->operatingSystem,
+        player          => $self->player,
+        player_width    => $self->player_width,
+        player_height   => $self->player_height,
+        fb_app_id       => $self->fb_app_id,
+    );
+}
+
+
 
 #
 # The End
