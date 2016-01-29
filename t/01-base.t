@@ -22,7 +22,6 @@ my $bad_meta_tags = HTML::SocialMeta->new(
 throws_ok{$bad_meta_tags->twitter->create_summary} qr/you have not set this field value title/;
 throws_ok{$bad_meta_tags->opengraph->create_article} qr/you have not set this field value title/;
 
-use Data::Dumper;
 my $social = HTML::SocialMeta->new();
 my @social_required_fields = $social->required_fields('summary');
 

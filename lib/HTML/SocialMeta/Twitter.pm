@@ -6,7 +6,7 @@ use Carp;
 
 extends 'HTML::SocialMeta::Base';
 
-our $VERSION = '0.4';
+our $VERSION = '0.5';
 
 # Provider Specific Fields
 has 'meta_attribute' =>
@@ -104,7 +104,7 @@ HTML::SocialMeta::Twitter
 
 =head1 VERSION
 
-Version 0.2
+Version 0.5
 
 =cut
 
@@ -132,12 +132,13 @@ Base class to create Twitter Cards
         player_height => '500',            
    );
 
-   $twitter->create('summary featured_image app player');
+    # 'summary', 'featured_image', 'app', 'player'
+    $twitter->create('summary');
    
-   $twitter->create_summary;
-   $twitter->create_summary_large_image;
-   $twitter->create_app;
-   $twitter->create_player;
+    $twitter->create_summary;
+    $twitter->create_summary_large_image;
+    $twitter->create_app;
+    $twitter->create_player;
 
 =cut 
 
@@ -145,7 +146,7 @@ Base class to create Twitter Cards
 
 =head1 VERSION
 
-Version 0.4
+Version 0.5
 
 =cut
 
@@ -199,8 +200,6 @@ Robert Acock <ThisUsedToBeAnEmail@gmail.com>
 Robert Haliday <robh@cpan.org>
 
 =head1 TODO
- 
-    * Add support for player streaming 
  
 =head1 BUGS AND LIMITATIONS
  

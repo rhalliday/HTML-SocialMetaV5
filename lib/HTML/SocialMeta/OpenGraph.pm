@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 use Carp;
 
-our $VERSION = '0.4';
+our $VERSION = '0.5';
 
 extends 'HTML::SocialMeta::Base';
 
@@ -107,7 +107,7 @@ HTML::SocialMeta::OpenGraph
 
 =head1 VERSION
 
-Version 0.4
+Version 0.5
 
 =cut
 
@@ -131,26 +131,26 @@ Base class for creating OpenGraph meta data
         player_height => '500',            
    );
 
-   $opengraph->create('summary featured_image app player');
+    # 'summary', 'featured_image', 'app', 'player'
+    $opengraph->create('summary featured_image app player');
    
-   $opengraph->create_thumnail;
-   $opengraph->create_article;
-   $opengraph->create_product';
-   $opengraph->create_video;
-
+    $opengraph->create_thumnail;
+    $opengraph->create_article;
+    $opengraph->create_product';
+    $opengraph->create_video;
 
 
 =head1 SUBROUTINES/METHODS
 
 =head2 card_options
 
-An Hash Reference of card options available for this meta provider, it is used to map the create function when create is called.
+A Hash Reference of card options available for this meta provider, it is used to map the create function when create is called.
 
 =cut
 
 =head2 build_fields 
     
-An Hash Reference of fields that are attached to the selected card:
+A Hash Reference of fields that are attached to the selected card:
 
 =cut
 

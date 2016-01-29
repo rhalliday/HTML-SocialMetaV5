@@ -6,7 +6,7 @@ use List::MoreUtils qw(uniq);
 use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 
-our $VERSION = '0.4';
+our $VERSION = '0.5';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
@@ -114,13 +114,13 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.4
+Version 0.5
 
 =head1 SYNOPSIS
 
     use HTML::SocialMeta;
     # summary or featured image card setup
-    my $social = HTML::SocialCards->new(
+    my $social = HTML::SocialMeta->new(
         site => '',
         site_name => '',
         title => '',
@@ -133,13 +133,15 @@ Version 0.4
     );
 
     # returns meta tags for all providers	
-    my $meta_tags = $social->create('summary | featured_image | app | player');
+    # additional options 'featured_image',  'app', 'player'   
+    my $meta_tags = $social->create('summary');
 
     # returns meta tags specificly for a single provider
     my $twitter_tags = $social->twitter;
     my $opengraph_tags = $social->opengraph;
 
-    my $twitter->create('summary' | 'featured_image' | 'player' | 'app');
+    my $twitter = $social->twitter;
+    my $twitter->create('summary');
     
     # Alternatively call a card directly
     my $summary_card = $meta_tags->twitter->create_summary;
@@ -411,7 +413,8 @@ Create the Meta Tags - this returns the meta information for all the providers:
 	
 You just need to specify the card type on create
 
-    $social->create('summary | featured_image | app | player');
+    #'summary', 'featured_image', 'app', 'player'
+    $social->create('summary');
 
 =cut
 
@@ -428,8 +431,6 @@ Returns a list of fields that are required to build the meta tags
 =head1 BUGS AND LIMITATIONS
  
 Please report any bugs at http://rt.cpan.org/.
-
-=todo
 
 Add support for Schema.org Rich Snippets
 Improve Unit Tests
