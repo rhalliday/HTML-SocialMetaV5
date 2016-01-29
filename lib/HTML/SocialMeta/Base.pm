@@ -2,7 +2,7 @@ package HTML::SocialMeta::Base;
 use Moose;
 use namespace::autoclean;
 use Carp;
-our $VERSION = '0.4';
+our $VERSION = '0.5';
 
 # A list of fields which the cards may possibly use
 has [qw(card_type card type name url)] => (
@@ -157,7 +157,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.4
+Version 0.5
 
 =cut
 
@@ -165,7 +165,7 @@ Version 0.4
 
     use HTML::SocialMeta;
     # summary or featured image 
-    my $social = HTML::SocialCards->new(
+    my $social = HTML::SocialMeta->new(
         site => '',
         site_name => '',
         title => '',
@@ -177,13 +177,15 @@ Version 0.4
     );
 
     # returns meta tags for all providers   
-    my $meta_tags = $social->create('summary | featured_image | app | player');
+    # 'summary', 'featured_image', 'app', 'player'
+    my $meta_tags = $social->create('summary');
 
     # returns meta tags specificly for a single provider
     my $twitter_tags = $social->twitter;
     my $opengraph_tags = $social->opengraph;
 
-    my $twitter->create('summary' | 'featured_image' | 'player' | 'app');
+    # 'summary', 'featured_image', 'app', 'player'
+    my $twitter->create('summary');
 
 
 =head1 SUBROUTINES/METHODS
