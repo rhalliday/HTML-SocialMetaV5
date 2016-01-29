@@ -6,7 +6,7 @@ use Carp;
 
 extends 'HTML::SocialMeta::Base';
 
-our $VERSION = '0.22';
+our $VERSION = '0.4';
 
 # Provider Specific Fields
 has 'meta_attribute' =>
@@ -145,7 +145,7 @@ Base class to create Twitter Cards
 
 =head1 VERSION
 
-Version 0.3
+Version 0.4
 
 =cut
 

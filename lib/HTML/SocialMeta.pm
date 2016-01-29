@@ -6,7 +6,7 @@ use List::MoreUtils qw(uniq);
 use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 
-our $VERSION = '0.3';
+our $VERSION = '0.4';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has [
@@ -114,7 +114,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.3
+Version 0.4
 
 =head1 SYNOPSIS
 
@@ -428,6 +428,12 @@ Returns a list of fields that are required to build the meta tags
 =head1 BUGS AND LIMITATIONS
  
 Please report any bugs at http://rt.cpan.org/.
+
+=todo
+
+Add support for Schema.org Rich Snippets
+Improve Unit Tests
+Add support for additional card types
 
 =head1 DEPENDENCIES
 

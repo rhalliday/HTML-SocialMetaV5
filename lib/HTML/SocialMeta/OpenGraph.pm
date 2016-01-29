@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 use Carp;
 
-our $VERSION = '0.2';
+our $VERSION = '0.4';
 
 extends 'HTML::SocialMeta::Base';
 
@@ -107,7 +107,7 @@ HTML::SocialMeta::OpenGraph
 
 =head1 VERSION
 
-Version 0.3
+Version 0.4
 
 =cut
 
