@@ -39,47 +39,27 @@ has '+build_fields' => (
 sub create_article {
     my ($self) = @_;
 
+    $self->item_scope(
+q{<meta itemscope itemtype="http://schema.org/NewsArticle">}
+    );
+
     $self->item_type(
-q{<meta itemprop="article" itemscope itemtype="http://schema.org/Article" />}
+q{<meta itemscope itemprop="article" itemtype="https://schema.org/Article" itemid="https://google.com/article" />}
+    );
+
+    $self->author(
+q{<div itemprop="image" itemscope itemtype="https://schema.org/ImageObject">}
+    );
+
+    $self->image_object(
+q{<div itemprop="image" itemscope itemtype="https://schema.org/Organization">}
+    );
+
+    $self->logo_object(
+q{<div itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">}
     );
 
     return $self->build_meta_tags('article');
-}
-
-sub create_offer {
-    my ($self) = @_;
-
-    $self->item_type(
-q{<meta itemprop="offer" itemscope itemtype="http://schema.org/Offer" />}
-    );
-
-    return $self->build_meta_tags('offer');
-}
-
-sub create_video {
-    my ($self) = @_;
-
-    $self->item_type(
-q{<meta itemprop="video" itemscope itemtype="http://schema.org/VideoObject" />}
-          . "\n"
-          . q{<meta itemprop="thumbnailUrl" content="}
-          . $self->image
-          . q{"/>} );
-
-    return $self->build_meta_tags('video');
-}
-
-sub create_software_application {
-    my ($self) = @_;
-
-    $self->item_type(
-q{<meta itemprop="software_application" itemscope itemtype="http://schema.org/SoftwareApplication" />}
-          . "\n"
-          . q{<link itemprop="applicationCategory" href="http://schema.org/GameApplication"/>}
-
-    );
-
-    return $self->build_meta_tags('software_application');
 }
 
 override _convert_field => sub {

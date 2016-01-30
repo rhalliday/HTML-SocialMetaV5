@@ -55,9 +55,9 @@ ok($meta_tags);
 my $twitter = $meta_tags->twitter;
 # Create Twitter Cards
 my $twitter_summary_card = $meta_tags->twitter->create_summary;
-my $twitter_featured_image_card = $meta_tags->twitter->create_summary_large_image;
-my $twitter_app_card = $meta_tags->twitter->create_app;
-my $twitter_player_card = $meta_player_tags->twitter->create_player;
+my $twitter_summary_large_image = $meta_tags->twitter->create_summary_large_image;
+my $twitter_app = $meta_tags->twitter->create_app;
+my $twitter_player = $meta_tags->twitter->create_player;
 
 # Meta tags we need for Twitter to work
 my $test_twitter = '<meta name="twitter:card" content="summary"/>
@@ -76,18 +76,7 @@ my $test_twitter_featured = '<meta name="twitter:card" content="summary_large_im
 <meta name="twitter:image" content="www.urltoimage.com/blah.jpg"/>';
 
 is($twitter->create('featured_image'), $test_twitter_featured);
-is($twitter_featured_image_card, $test_twitter_featured);
-
-my $test_twitter_app_card = '<meta name="twitter:card" content="app"/>
-<meta name="twitter:site" content="@example_twitter"/>
-<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
-<meta name="twitter:app:country" content="test"/>
-<meta name="twitter:app:name:googleplay" content="test"/>
-<meta name="twitter:app:id:googleplay" content="test"/>
-<meta name="twitter:app:url:googleplay" content="test"/>';
-
-is($twitter->create('app'), $test_twitter_app_card);
-is($twitter_app_card, $test_twitter_app_card);
+is($twitter_summary_large_image, $test_twitter_featured);
 
 my $test_player_card = '<meta name="twitter:card" content="player"/>
 <meta name="twitter:site" content="@example_twitter"/>
@@ -99,7 +88,18 @@ my $test_player_card = '<meta name="twitter:card" content="player"/>
 <meta name="twitter:player:height" content="500"/>';
 
 is($twitter->create('player'), $test_player_card);
-is($twitter_player_card, $test_player_card);
+is($twitter_player, $test_player_card);
+
+my $android_test_tags = q(<meta name="twitter:card" content="app"/>
+<meta name="twitter:site" content="@example_twitter"/>
+<meta name="twitter:description" content="Description goes here may have to do a little validation"/>
+<meta name="twitter:app:country" content="test"/>
+<meta name="twitter:app:name:googleplay" content="test"/>
+<meta name="twitter:app:id:googleplay" content="test"/>
+<meta name="twitter:app:url:googleplay" content="test"/>);
+
+is($twitter->create('app'), $android_test_tags);
+is($twitter_app, $android_test_tags);
 
 my $ios_test_tags = q(<meta name="twitter:card" content="app"/>
 <meta name="twitter:site" content="@example_twitter"/>

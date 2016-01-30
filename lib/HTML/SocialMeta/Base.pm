@@ -5,20 +5,22 @@ use Carp;
 our $VERSION = '0.5';
 
 # A list of fields which the cards may possibly use
-has [qw(card_type card type name url)] => (
-    isa     => 'Str',
+has [qw(card_type name url)] => (
+    isa     => 'HashRef',
     is      => 'rw',
     lazy    => 1,
-    default => q{},
+    default => sub { {} },
 );
+
+has [qw(card type)] => ( isa => 'Str', is => 'rw', lazy => 1, default => sub { {}  }, ); 
 
 has [
     qw(site fb_app_id site_name name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width)
   ] => (
     is      => 'ro',
-    isa     => 'Str',
+    isa     => 'HashRef',
     lazy    => 1,
-    default => q{},
+    default => sub { {} },
   );
 
 # default should be overridden by sub-classes
@@ -31,7 +33,7 @@ has [qw(card_options build_fields)] => (
 sub create {
     my ( $self, $card_type ) = @_;
 
-    $card_type ||= $self->card_type;
+    $card_type ||= $self->card_type->{value};
 
     if ( my $option = $self->card_options->{$card_type} ) {
 
@@ -47,7 +49,7 @@ sub build_meta_tags {
     my @meta_tags;
 
     if ( $self->meta_attribute eq q{itemprop} ) {
-        push @meta_tags, $self->item_type;
+        push @meta_tags, $self->item_type->{value};
     }
 
     foreach my $field ( $self->required_fields($field_type) ) {
@@ -73,9 +75,15 @@ sub required_fields {
 sub _validate_field_value {
     my ( $self, $field ) = @_;
 
+    my $error_message = q{you have not set this field value } . $field;
+
+    if ($field =~ m{(?:card|type)}xms) {
+        croak $error_message if !$self->$field;
+        return; 
+    }
+
     # look to see we have the fields attribute set
-    croak q{you have not set this field value } . $field
-      if !$self->$field;
+    croak $error_message if !$self->$field->{value};
 
     return;
 }
@@ -104,9 +112,13 @@ sub _build_field {
     my $meta_namespace =
       $args->{ignore_meta_namespace} || $self->meta_namespace;
     my $field = $args->{field};
-
+    
     return sprintf q{<meta %s="%s:%s" content="%s"/>},
-      $self->meta_attribute, $meta_namespace, $field_type, $self->$field;
+        $self->meta_attribute, $meta_namespace, $field_type, $self->$field
+            if $field =~ m{(?:card|type)}xms;
+        
+    return sprintf q{<meta %s="%s:%s" content="%s"/>},
+      $self->meta_attribute, $meta_namespace, $field_type, $self->$field->{value};
 }
 
 sub _convert_field {

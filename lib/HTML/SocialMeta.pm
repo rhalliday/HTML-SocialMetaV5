@@ -10,8 +10,9 @@ use HTML::SocialMeta::RichSnippet;
 our $VERSION = '0.5';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
+has 'card' => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has [
-    qw(card name site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width fb_app_id)
+    qw(name site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width fb_app_id)
   ] => (
     is      => 'ro',
     isa     => 'Str',
@@ -48,7 +49,7 @@ sub create {
     $self->card_type($card_type);
 
     my @meta_tags =
-      map { $self->$_->create( $self->card_type ) } qw/twitter opengraph richsnippet/;
+      map { $self->$_->create( $self->card_type ) } qw/twitter opengraph/;
 
     return join "\n", @meta_tags;
 }
@@ -58,7 +59,7 @@ sub required_fields {
 
     my @meta_tags =
       map { $self->$_->required_fields( $self->$_->meta_option($card_type) ) }
-      qw/twitter opengraph richsnippet/;
+      qw/twitter opengraph/;
 
     my @required_fields = uniq(@meta_tags);
 
@@ -68,23 +69,53 @@ sub required_fields {
 sub build_twitter {
     my $self = shift;
 
-    return HTML::SocialMeta::Twitter->new(
-        card_type       => $self->card_type,
-        site            => $self->site,
-        title           => $self->title,
-        description     => $self->description,
-        image           => $self->image,
-        url             => $self->url,
-        creator         => $self->creator,
-        operatingSystem => $self->operatingSystem,
-        app_country     => $self->app_country,
-        app_name        => $self->app_name,
-        app_id          => $self->app_id,
-        app_url         => $self->app_url,
-        player          => $self->player,
-        player_width    => $self->player_width,
-        player_height   => $self->player_height,
-    );
+    return HTML::SocialMeta::Twitter->new({
+        card_type => { 
+            value          => $self->card_type,
+        },
+        site => {
+            value           => $self->site,
+        },
+        title => {
+            value           => $self->title,
+        },
+        description => {
+            value           => $self->description,
+        },
+        image => {
+            value           => $self->image,
+        },
+        url => {
+            value           => $self->url,
+        },
+        creator => {
+            value           => $self->creator,
+        },
+        operatingSystem => {
+            value           => $self->operatingSystem,
+        },
+        app_country => {
+            value           => $self->app_country,
+        },
+        app_name => {
+            value           => $self->app_name,
+        },
+        app_id => {
+            value           => $self->app_id,
+        },
+        app_url => {
+            value           => $self->app_url,
+        },
+        player => {
+            value           => $self->player,
+        },
+        player_width => {
+            value           => $self->player_width,
+        },
+        player_height => {
+            value           => $self->player_height,
+        },
+    });
 }
 
 sub build_opengraph {
@@ -92,19 +123,41 @@ sub build_opengraph {
 
     my $url = $self->app_url ? $self->app_url : $self->url;
 
-    return HTML::SocialMeta::OpenGraph->new(
-        card_type       => $self->card_type,
-        site_name       => $self->site_name,
-        title           => $self->title,
-        description     => $self->description,
-        image           => $self->image,
-        url             => $url,
-        operatingSystem => $self->operatingSystem,
-        player          => $self->player,
-        player_width    => $self->player_width,
-        player_height   => $self->player_height,
-        fb_app_id       => $self->fb_app_id,
-    );
+    return HTML::SocialMeta::OpenGraph->new({
+        card_type => {
+            value           => $self->card_type,
+        },
+        site_name => {
+            value            => $self->site_name,
+        },
+        title => {
+            value            => $self->title,
+        },
+        description => {
+            value            => $self->description,
+        },
+        image => {
+            value            => $self->image,
+        },
+        url => {
+            value            => $url,
+        },
+        operatingSystem => {
+            value            => $self->operatingSystem,
+        },
+        player => {
+            value           => $self->player,
+        },
+        player_width => {
+            value           => $self->player_width,
+        },
+        player_height => {
+            value           => $self->player_height,
+        },
+        fb_app_id => {
+            value           => $self->fb_app_id,
+        },
+    });
 }
 
 sub build_richsnippet {
@@ -112,20 +165,53 @@ sub build_richsnippet {
 
     my $url = $self->app_url ? $self->app_url : $self->url;
 
-    return HTML::SocialMeta::RichSnippet->new(
-        card_type       => $self->card_type,
-        name            => $self->name,
-        description     => $self->description,
-        image           => $self->image,
-        url             => $url,
-        operatingSystem => $self->operatingSystem,
-        player          => $self->player,
-        player_width    => $self->player_width,
-        player_height   => $self->player_height,
-        fb_app_id       => $self->fb_app_id,
-    );
+    return HTML::SocialMeta::RichSnippet->new({
+            card_type => {
+                 value           => $self->card_type,
+                 tag             => 'meta',
+            },
+            headline => {
+                value           => $self->title,
+                tag             => 'h2',
+            },
+            author => {
+                value           => $self->name,
+                tag             => 'span',
+            },
+            description => {
+                value           => $self->description,
+                tag             => 'span',
+            },
+            image => {
+                value           => $self->image,
+                tag             => 'img',
+            },
+            url => {
+                value           => $url,
+                tag             => 'url',
+            },
+            operatingSystem => {
+                value           => $self->operatingSystem,
+                tag             => 'meta',
+            },
+            player => {
+                value           => $self->player,
+                tag             => 'meta',
+            },
+            player_width => {
+                value           => $self->player_width,
+                tag             => 'meta',
+            },
+            player_height => {
+                value           => $self->player_height,
+                tag             => 'meta',
+            },
+            fb_app_id => {
+                value           => $self->fb_app_id,
+                tag             => 'meta',
+            },
+        });
 }
-
 
 
 #

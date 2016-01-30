@@ -78,13 +78,13 @@ sub provider_convert {
       if $field !~ m{^app}xms || $field =~ m{country$}xms;
 
     return [ { field_type => $field . ':googleplay' } ]
-      if $self->operatingSystem eq q{ANDROID};
+      if $self->operatingSystem->{value} eq q{ANDROID};
 
     return [
         { field_type => $field . ':iphone' },
         { field_type => $field . ':ipad' }
       ]
-      if $self->operatingSystem eq q{IOS};
+      if $self->operatingSystem->{value} eq q{IOS};
 
     return croak 'We currently do not support this APP type';
 }
