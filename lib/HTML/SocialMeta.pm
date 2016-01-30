@@ -214,7 +214,6 @@ sub _build_richsnippet {
         });
 }
 
-
 #
 # The End
 #

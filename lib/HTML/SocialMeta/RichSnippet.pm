@@ -63,7 +63,7 @@ has '+card_options' => (
 has '+build_fields' => (
 	default => sub {
 		return {
-			article => [qw(item_scope item_type headline author name description image_object image author logo_object name_meta)],
+			article => [qw(item_scope item_type headline author description image_object image author logo_object name)],
 		};
 	},
 );
@@ -97,13 +97,21 @@ sub _build_item_type {
 }
 
 sub _build_author {
+    my $self = shift;
+    my $value = $self->name->{value};
+
     return {
         value => q{custom},
-        tag => q{div},
+        tag => q{h3},
         attributes => {
             itemprop => q{image},        
             itemtype => q{https://schema.org/ImageOrganisation}
          },
+         embed_attribute => { 
+                tag => q{span},
+                itemprop => q{name},
+                value => $value,
+        }
     };
 }
 
@@ -114,7 +122,7 @@ sub _build_image_object {
         attributes => {
             itemprop => q{image},
             itemtype => q{https://schema.org/ImageObject}
-        }
+        },
     };
 }
 
@@ -125,7 +133,7 @@ sub _build_logo_object {
         attributes => {
             itemprop => q{logo},
             itemtype => q{https://schema.org/ImageObject},
-        }
+        }, 
     };
 }
 
@@ -146,27 +154,40 @@ override _build_field => sub {
 
     my $field_type = $args->{field_type} || $args->{field};
     my $field = $args->{field};
+    my $attribute = $self->meta_attribute;
+    my $itemprop = $self->{itemprop};
+    my $itemtype = $self->{itemtype};
+    my $tag = $self->$field->{tag};
+
 
     return sprintf q{<meta %s="%s" content="%s"/>},
-       $self->meta_attribute, $field_type, $self->$field
+       $attribute, $field_type, $self->$field
             if !$self->$field->{tag};
 
     return sprintf q{<%s %s="%s">%s<%s>},
-        $self->$field->{tag}, $self->meta_attribute, $field_type, $self->$field->{value}, $self->$field->{tag}  
+        $tag, $attribute, $field_type, $self->$field->{value}, $tag  
             if !$self->$field->{attributes};
 
-    my $meta_attributes = $self->$field->{attributes};
-    
+    my $meta_attributes = $self->$field->{attributes};    
+
     return sprintf q{<%s itemscope itemtype="%s">},
-        $self->$field->{tag}, $meta_attributes->{itemtype} 
+        $tag, $meta_attributes->{itemtype} 
             if !$meta_attributes->{itemprop};
 
     return sprintf q{<%s %s="%s" itemscope itemtype="%s">},
-        $self->$field->{tag}, $self->meta_attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}
-            if !$meta_attributes->{itemid}; 
+        $tag, $attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}
+            if !$meta_attributes->{itemid} && !$self->$field->{embed_attribute}; 
 
     return sprintf q{<%s %s="%s" itemscope itemtype="%s" itemid="%s">},
-        $self->$field->{tag}, $self->meta_attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}, $meta_attributes->{itemid}; 
+        $tag, $attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}, $meta_attributes->{itemid}
+            if !$self->$field->{embed_attribute};
+
+    # if field has a embedded attribute then render it too
+    my $inherit_attributes = $self->$field->{embed_attribute};
+    use Data::Dumper;
+    warn Dumper $inherit_attributes->{value};
+    return sprintf q{<%s %s=%s itemscope itemtype="%s"><%s %s="%s"> %s </%s></%s>},
+        $tag, $attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}, $inherit_attributes->{tag}, $attribute, $inherit_attributes->{itemprop}, $inherit_attributes->{value}, $inherit_attributes->{tag}, $tag;
 
 };
 
