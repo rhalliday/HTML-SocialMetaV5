@@ -2,7 +2,7 @@ package HTML::SocialMeta::Base;
 use Moose;
 use namespace::autoclean;
 use Carp;
-our $VERSION = '0.5';
+our $VERSION = '0.5_1';
 
 # A list of fields which the cards may possibly use
 has [qw(card_type name url)] => (
@@ -169,7 +169,7 @@ builds and returns the Meta Tags
 
 =head1 VERSION
 
-Version 0.5
+Version 0.5_1
 
 =cut
 

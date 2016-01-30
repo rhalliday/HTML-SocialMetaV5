@@ -7,7 +7,7 @@ use HTML::SocialMeta::Twitter;
 use HTML::SocialMeta::OpenGraph;
 use HTML::SocialMeta::RichSnippet;
 
-our $VERSION = '0.5';
+our $VERSION = '0.5_1';
 
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has 'card' => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
@@ -229,7 +229,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 =head1 VERSION
 
-Version 0.5
+Version 0.5_1
 
 =head1 SYNOPSIS
 

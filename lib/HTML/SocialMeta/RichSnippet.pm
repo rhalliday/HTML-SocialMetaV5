@@ -3,7 +3,7 @@ use Moose;
 use namespace::autoclean;
 use Carp;
 
-our $VERSION = '0.5';
+our $VERSION = '0.5_1';
 
 extends 'HTML::SocialMeta::Base';
 
@@ -186,7 +186,7 @@ Most probably. Please report any bugs at http://rt.cpan.org/.
 
 =head1 LICENSE AND COPYRIGHT
  
-Copyright 2015 Robert Acock.
+Copyright 2016 Robert Acock.
  
 This program is free software; you can redistribute it and/or modify it
 under the terms of the the Artistic License (2.0). You may obtain a
