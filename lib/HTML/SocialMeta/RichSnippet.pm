@@ -14,16 +14,40 @@ has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'content' );
 has 'item_type' => ( isa => 'Str', is => 'rw', required => 1, default => q{} );
 
-has [q(itemscope item_type author image_object logo_object)] =>
-    ( isa => 'HashRef', is => 'rw', lazy => 1, default => sub { {} } );
+has 'item_scope' => (
+    is => 'rw',
+    isa => 'HashRef',
+    builder => '_build_item_scope',
+);
+
+has 'item_type' => (
+    is => 'rw',
+    isa => 'HashRef',
+    builder => '_build_item_type',
+);
+
+has 'author' => (
+    is => 'rw',
+    isa => 'HashRef',
+    builder => '_build_author',
+);
+
+has 'image_object' => (
+    is => 'rw',
+    isa => 'HashRef',
+    builder => '_build_image_object',
+);
+
+has 'logo_object' => (
+    is => 'rw',
+    isa => 'HashRef',
+    builder => '_build_logo_object',
+);
 
 has '+card_options' => (
 	default => sub {
 		return {
-			summary        => q(create_article),
-			featured_image => q(create_offer),
-			player         => q(create_video),
-			app            => q(create_software_application),
+			summary => q(create_article),
 		};
 	},
 );
@@ -31,69 +55,75 @@ has '+card_options' => (
 has '+build_fields' => (
 	default => sub {
 		return {
-			article => [qw(name description image)],
-			offer   => [qw(name description image)],
-			video => [qw(name description image player player_width player_height)],
-			software_application => [qw(name description image operatingSystem url)]
+			article => [qw(item_scope item_type headline author name description image_object image author logo_object name_meta)],
 		};
 	},
 );
 
 sub create_article {
     my ($self) = @_;
+    
+    return $self->build_meta_tags('article');
+}
 
-
-    $self->item_scope({
+sub _build_item_scope {
+    return {
         value => q{custom},
         tag => q{meta},
         new_meta_attribute => {
             itemscope => q{},
             itemtype => q{http://schema.org/NewsArticle}
         },
-    });
+    };
+}
 
-    $self->item_type({
+sub _build_item_type {
+    return {
         value => q{custom},
-        tag  => q{meta},
+        tag => q{meta},
         new_meta_attribute => {
             itemscope => q{},
             itemprop => q{mainEntityOfPage},
             itemtype => q{https://schema.org/WepPage},
             itemid => q{https://google.com/article}
-        },
-    });
+        }
+    };
+}
 
-    $self->author({
+sub _build_author {
+    return {
         value => q{custom},
         tag => q{div},
         new_meta_attribute => {
             itemscope => q{},
             itemprop => q{image},        
-            itemtype => q{https://schema.org/ImageObject}
+            itemtype => q{https://schema.org/ImageOrganisation}
          },
-    });
+    };
+}
 
-    $self->image_object({
-       value => q{custom},
-       tag => q{div},
-       new_meta_attribute => {
-           itemscope => q{},
-           itemprop => q{image},
-           itemtype => q{https://schema.org/Organization}
-        },
-    });
+sub _build_image_object {
+    return {
+        value => q{custom},
+        tag => q{div},
+        new_meta_attribute => {
+            itemscope => q{},
+            itemprop => q{image},
+            itemtype => q{https://schema.org/ImageObject}
+        }
+    };
+}
 
-    $self->logo_object({
+sub _build_logo_object {
+    return {
         value => q{custom},
         tag => q{div},
         new_meta_attribute => {
             itemscope => q{},
             itemprop => q{logo},
             itemtype => q{https://schema.org/ImageObject},
-        },
-    });
-
-    return $self->build_meta_tags('article');
+        }
+    };
 }
 
 override _convert_field => sub {

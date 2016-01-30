@@ -23,6 +23,10 @@ has [
     default => sub { {} },
   );
 
+  has [q(item_scope item_type author image_object logo_object)] =>
+    ( isa => 'HashRef', is => 'rw', lazy => 1, default => sub { {} } );
+
+
 # default should be overridden by sub-classes
 has [qw(card_options build_fields)] => (
     is      => 'ro',
