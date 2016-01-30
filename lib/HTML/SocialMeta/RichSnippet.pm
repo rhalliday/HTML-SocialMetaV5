@@ -48,13 +48,13 @@ sub create_article {
             tag => q{meta},
             new_meta_attribute => {
                 itemscope => q{},
-                itemtype => q{http://schema.org/NewsArticle"}
+                itemtype => q{http://schema.org/NewsArticle}
             }
         });
 
     $self->item_type({
             value => q{custom},
-            tag  => 'meta',
+            tag  => q{meta},
             new_meta_attribute => {
                 itemscope => q{},
                 itemprop => q{article},
