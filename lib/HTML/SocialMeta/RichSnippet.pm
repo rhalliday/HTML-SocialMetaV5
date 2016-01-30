@@ -14,6 +14,14 @@ has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'content' );
 has 'item_type' => ( isa => 'Str', is => 'rw', required => 1, default => q{} );
 
+has 'name_meta' => (
+    is => 'rw',
+    isa => 'HashRef',
+    default => sub {
+        return { value => shift->name },
+    },
+);
+
 has 'item_scope' => (
     is => 'rw',
     isa => 'HashRef',

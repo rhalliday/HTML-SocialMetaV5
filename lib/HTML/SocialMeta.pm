@@ -174,9 +174,13 @@ sub _build_richsnippet {
                 value           => $self->title,
                 tag             => 'h2',
             },
-            author => {
-                value           => $self->name,
+            name => {
+                value           => $self->site_name,
                 tag             => 'span',
+            },
+            name_meta => {
+                value           => $self->site_name,
+                tag             => 'meta'
             },
             description => {
                 value           => $self->description,

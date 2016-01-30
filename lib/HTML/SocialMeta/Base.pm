@@ -15,7 +15,7 @@ has [qw(card_type name url)] => (
 has [qw(card type)] => ( isa => 'Str', is => 'rw', lazy => 1, default => sub { {}  }, ); 
 
 has [
-    qw(site fb_app_id site_name name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width)
+    qw(site fb_app_id site_name name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width headline)
   ] => (
     is      => 'ro',
     isa     => 'HashRef',
