@@ -168,7 +168,6 @@ sub _build_richsnippet {
     return HTML::SocialMeta::RichSnippet->new({
             card_type => {
                  value           => $self->card_type,
-                 tag             => 'meta',
             },
             headline => {
                 value           => $self->title,
@@ -180,7 +179,6 @@ sub _build_richsnippet {
             },
             name_meta => {
                 value           => $self->site_name,
-                tag             => 'meta'
             },
             description => {
                 value           => $self->description,
@@ -196,7 +194,6 @@ sub _build_richsnippet {
             },
             operatingSystem => {
                 value           => $self->operatingSystem,
-                tag             => 'meta',
             },
             player => {
                 value           => $self->player,

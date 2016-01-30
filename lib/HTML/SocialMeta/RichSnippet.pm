@@ -77,9 +77,8 @@ sub create_article {
 sub _build_item_scope {
     return {
         value => q{custom},
-        tag => q{meta},
-        new_meta_attribute => {
-            itemscope => q{},
+        tag => q{div},
+        attributes => {
             itemtype => q{http://schema.org/NewsArticle}
         },
     };
@@ -89,8 +88,7 @@ sub _build_item_type {
     return {
         value => q{custom},
         tag => q{meta},
-        new_meta_attribute => {
-            itemscope => q{},
+        attributes => {
             itemprop => q{mainEntityOfPage},
             itemtype => q{https://schema.org/WepPage},
             itemid => q{https://google.com/article}
@@ -102,8 +100,7 @@ sub _build_author {
     return {
         value => q{custom},
         tag => q{div},
-        new_meta_attribute => {
-            itemscope => q{},
+        attributes => {
             itemprop => q{image},        
             itemtype => q{https://schema.org/ImageOrganisation}
          },
@@ -114,8 +111,7 @@ sub _build_image_object {
     return {
         value => q{custom},
         tag => q{div},
-        new_meta_attribute => {
-            itemscope => q{},
+        attributes => {
             itemprop => q{image},
             itemtype => q{https://schema.org/ImageObject}
         }
@@ -126,8 +122,7 @@ sub _build_logo_object {
     return {
         value => q{custom},
         tag => q{div},
-        new_meta_attribute => {
-            itemscope => q{},
+        attributes => {
             itemprop => q{logo},
             itemtype => q{https://schema.org/ImageObject},
         }
@@ -153,7 +148,25 @@ override _build_field => sub {
     my $field = $args->{field};
 
     return sprintf q{<meta %s="%s" content="%s"/>},
-       $self->meta_attribute, $field_type, $self->$field ;
+       $self->meta_attribute, $field_type, $self->$field
+            if !$self->$field->{tag};
+
+    return sprintf q{<%s %s="%s">%s<%s>},
+        $self->$field->{tag}, $self->meta_attribute, $field_type, $self->$field->{value}, $self->$field->{tag}  
+            if !$self->$field->{attributes};
+
+    my $meta_attributes = $self->$field->{attributes};
+    
+    return sprintf q{<%s itemscope itemtype="%s">},
+        $self->$field->{tag}, $meta_attributes->{itemtype} 
+            if !$meta_attributes->{itemprop};
+
+    return sprintf q{<%s %s="%s" itemscope itemtype="%s">},
+        $self->$field->{tag}, $self->meta_attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}
+            if !$meta_attributes->{itemid}; 
+
+    return sprintf q{<%s %s="%s" itemscope itemtype="%s" itemid="%s">},
+        $self->$field->{tag}, $self->meta_attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}, $meta_attributes->{itemid}; 
 
 };
 
