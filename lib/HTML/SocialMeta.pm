@@ -24,21 +24,21 @@ has 'twitter' => (
     isa     => 'HTML::SocialMeta::Twitter',
     is      => 'ro',
     lazy    => 1,
-    builder => 'build_twitter',
+    builder => '_build_twitter',
 );
 
 has 'opengraph' => (
     isa     => 'HTML::SocialMeta::OpenGraph',
     is      => 'ro',
     lazy    => 1,
-    builder => 'build_opengraph',
+    builder => '_build_opengraph',
 );
 
 has 'richsnippet' => (
     isa     => 'HTML::SocialMeta::RichSnippet',
     is      => 'ro',
     lazy    => 1,
-    builder => 'build_richsnippet',
+    builder => '_build_richsnippet',
 );
 
 sub create {
@@ -66,7 +66,7 @@ sub required_fields {
     return @required_fields;
 }
 
-sub build_twitter {
+sub _build_twitter {
     my $self = shift;
 
     return HTML::SocialMeta::Twitter->new({
@@ -118,7 +118,7 @@ sub build_twitter {
     });
 }
 
-sub build_opengraph {
+sub _build_opengraph {
     my $self = shift;
 
     my $url = $self->app_url ? $self->app_url : $self->url;
@@ -160,7 +160,7 @@ sub build_opengraph {
     });
 }
 
-sub build_richsnippet {
+sub _build_richsnippet {
     my $self = shift;
 
     my $url = $self->app_url ? $self->app_url : $self->url;
