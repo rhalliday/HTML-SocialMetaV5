@@ -14,8 +14,8 @@ has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'content' );
 has 'item_type' => ( isa => 'Str', is => 'rw', required => 1, default => q{} );
 
-has q[itemscope item_type author image_object logo_object] =>
-    ( isa => 'HashRef' is => 'rw', lazy => 1, default => sub { {} } );
+has [q(itemscope item_type author image_object logo_object)] =>
+    ( isa => 'HashRef', is => 'rw', lazy => 1, default => sub { {} } );
 
 has '+card_options' => (
 	default => sub {
@@ -32,7 +32,7 @@ has '+build_fields' => (
 	default => sub {
 		return {
 			article => [qw(name description image)],
-			offer   => [qw(name  description image)],
+			offer   => [qw(name description image)],
 			video => [qw(name description image player player_width player_height)],
 			software_application => [qw(name description image operatingSystem url)]
 		};
@@ -44,52 +44,53 @@ sub create_article {
 
 
     $self->item_scope({
-            value => q{custom},
-            tag => q{meta},
-            new_meta_attribute => {
-                itemscope => q{},
-                itemtype => q{http://schema.org/NewsArticle}
-            }
-        });
+        value => q{custom},
+        tag => q{meta},
+        new_meta_attribute => {
+            itemscope => q{},
+            itemtype => q{http://schema.org/NewsArticle}
+        },
+    });
 
     $self->item_type({
-            value => q{custom},
-            tag  => q{meta},
-            new_meta_attribute => {
-                itemscope => q{},
-                itemprop => q{article},
-                itemtype => q{https://schema.org/Article},
-                itemid => q{https://google.com/article}
-            },
-        });
+        value => q{custom},
+        tag  => q{meta},
+        new_meta_attribute => {
+            itemscope => q{},
+            itemprop => q{mainEntityOfPage},
+            itemtype => q{https://schema.org/WepPage},
+            itemid => q{https://google.com/article}
+        },
+    });
 
     $self->author({
-            value => q{custom},
-            tag => q{div},
-            new_meta_attribute => {
-                itemscope => q{},
-                itemprop => q{image},        
-                itemtype => q{https://schema.org/ImageObject}
-            }
-        });
+        value => q{custom},
+        tag => q{div},
+        new_meta_attribute => {
+            itemscope => q{},
+            itemprop => q{image},        
+            itemtype => q{https://schema.org/ImageObject}
+         },
+    });
 
     $self->image_object({
-            value => q{custom},
-            tag => q{div},
-            new_meta_attribute => {
-                itemscope => q{},
-                itemprop => q{image},
-                itemtype => q{https://schema.org/Organization}
-            }
+       value => q{custom},
+       tag => q{div},
+       new_meta_attribute => {
+           itemscope => q{},
+           itemprop => q{image},
+           itemtype => q{https://schema.org/Organization}
+        },
+    });
 
     $self->logo_object({
-            value => q{custom},
-            tag => q{div},
-            new_meta_attribute => {
-                itemscope => q{},
-                itemprop => q{logo},
-                itemtype => q{https://schema.org/ImageObject},
-            }
+        value => q{custom},
+        tag => q{div},
+        new_meta_attribute => {
+            itemscope => q{},
+            itemprop => q{logo},
+            itemtype => q{https://schema.org/ImageObject},
+        },
     });
 
     return $self->build_meta_tags('article');
