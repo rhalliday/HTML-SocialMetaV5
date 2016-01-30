@@ -236,7 +236,7 @@ OPTIONAL - if you always want the same card type you can set it
 
 The Twitter @username the card should be attributed to. Required for Twitter Card analytics. 
 
-=item site name
+=item site_name
 
 This is Used by Facebook, you can just set it as your organisations name.
 
