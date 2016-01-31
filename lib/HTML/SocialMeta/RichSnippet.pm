@@ -14,14 +14,6 @@ has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'content' );
 has 'item_type' => ( isa => 'Str', is => 'rw', required => 1, default => q{} );
 
-has 'name_meta' => (
-    is => 'rw',
-    isa => 'HashRef',
-    default => sub {
-        return { value => shift->name },
-    },
-);
-
 has 'item_scope' => (
     is => 'rw',
     isa => 'HashRef',
@@ -32,24 +24,6 @@ has 'item_type' => (
     is => 'rw',
     isa => 'HashRef',
     builder => '_build_item_type',
-);
-
-has 'author' => (
-    is => 'rw',
-    isa => 'HashRef',
-    builder => '_build_author',
-);
-
-has 'image_object' => (
-    is => 'rw',
-    isa => 'HashRef',
-    builder => '_build_image_object',
-);
-
-has 'logo_object' => (
-    is => 'rw',
-    isa => 'HashRef',
-    builder => '_build_logo_object',
 );
 
 has '+card_options' => (
@@ -93,47 +67,6 @@ sub _build_item_type {
             itemtype => q{https://schema.org/WepPage},
             itemid => q{https://google.com/article}
         }
-    };
-}
-
-sub _build_author {
-    my $self = shift;
-    my $value = $self->name->{value};
-
-    return {
-        value => q{custom},
-        tag => q{h3},
-        attributes => {
-            itemprop => q{image},        
-            itemtype => q{https://schema.org/ImageOrganisation}
-         },
-         embed_attribute => { 
-                tag => q{span},
-                itemprop => q{name},
-                value => $value,
-        }
-    };
-}
-
-sub _build_image_object {
-    return {
-        value => q{custom},
-        tag => q{div},
-        attributes => {
-            itemprop => q{image},
-            itemtype => q{https://schema.org/ImageObject}
-        },
-    };
-}
-
-sub _build_logo_object {
-    return {
-        value => q{custom},
-        tag => q{div},
-        attributes => {
-            itemprop => q{logo},
-            itemtype => q{https://schema.org/ImageObject},
-        }, 
     };
 }
 

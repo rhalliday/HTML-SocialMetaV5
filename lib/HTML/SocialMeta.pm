@@ -174,8 +174,17 @@ sub _build_richsnippet {
                 tag             => 'h2',
             },
             name => {
-                value           => $self->site_name,
-                tag             => 'span',
+                value => q{block},
+                tag => q{h3},
+                itemprop => q{author},
+                itemtype => q{https://schema.org/Person},
+                embed_attributes => {
+                    name =>  {
+                        value           => $self->site_name,
+                        itemprop        => q{https://schema.org/ImageOrganisation},
+                        tag             => 'span',
+                    },
+                },
             },
             name_meta => {
                 value           => $self->site_name,
@@ -185,33 +194,72 @@ sub _build_richsnippet {
                 tag             => 'span',
             },
             image => {
-                value           => $self->image,
-                tag             => 'img',
+                value           => q{block},
+                tag             => q{div},
+                itemprop        => q{image},
+                itemtype        => q{https://schema.org/ImageObject},
+                embed_attributes => {
+                    img => {
+                        value   => $self->image,
+                        tag     => 'img',
+                    },
+                     url => {
+                        value       => $self->image,
+                        itemprop    => 'url',
+                        tag         => 'meta',
+                    },
+                    width => {
+                        value       => '800',
+                        itemprop    => 'width',
+                        tag         => 'meta',
+                    },
+                    height => {
+                        value       => '800',   
+                        itemprop    => 'height',
+                        tag         => 'meta',
+                    },
+                },
             },
-            url => {
-                value           => $url,
-                tag             => 'url',
+            publisher => {
+                value           => q{block},
+                tag             => q{div},
+                itemprop        => q{publisher},
+                itemtype        => q{https://schema.org/Organization},
+                embed_attributes => {
+                    logo => {
+                        itemtype => q{https://schema.org/ImageObject},
+                        itemprop => q{logo},
+                        tag  => q{div},
+                        embed_attributes => {
+                            img => {
+                                value       => $self->logo,
+                                tag         => 'img',
+                            },
+                            url => {
+                                value       => $self->logo,
+                                itemprop    => 'url',
+                                tag         => 'meta',
+                            },
+                            width => {
+                                value       => '600',
+                                itemprop    => 'width',
+                                tag         => 'meta',
+                            },
+                            height => {
+                                value       => '60',   
+                                itemprop    => 'height',
+                                tag         => 'meta',
+                            },
+                        },
+                    },
+                    name => {
+                        tag => q{meta},
+                        value => $self->name,
+                    },
+                },
             },
-            operatingSystem => {
-                value           => $self->operatingSystem,
-            },
-            player => {
-                value           => $self->player,
-                tag             => 'meta',
-            },
-            player_width => {
-                value           => $self->player_width,
-                tag             => 'meta',
-            },
-            player_height => {
-                value           => $self->player_height,
-                tag             => 'meta',
-            },
-            fb_app_id => {
-                value           => $self->fb_app_id,
-                tag             => 'meta',
-            },
-        });
+        },
+    );
 }
 
 #
