@@ -4,7 +4,7 @@ HTML::SocialMeta - Module to generate Social Media Meta Tags,
 
 # VERSION
 
-Version 0.5
+Version 0.5\_1
 
 # SYNOPSIS
 
@@ -95,7 +95,7 @@ Returns an instance of this class. Requires `$url` as an argument;
 
     The Twitter @username the card should be attributed to. Required for Twitter Card analytics. 
 
-- site name
+- site\_name
 
     This is Used by Facebook, you can just set it as your organisations name.
 

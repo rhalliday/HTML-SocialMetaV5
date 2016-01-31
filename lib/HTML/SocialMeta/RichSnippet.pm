@@ -80,8 +80,7 @@ override _convert_field => sub {
 
 override _build_field => sub {
     my ( $self, $args) = @_;
-
-    
+ 
 };
 
 #
@@ -95,7 +94,7 @@ __END__
 
 =head1 NAME
 
-HTML::SocialMeta::Schema
+HTML::SocialMeta::RichSnippet
 
 =head1 VERSION
 
@@ -105,59 +104,37 @@ Version 0.2
 
 =head1 DESCRIPTION
 
-Base class for creating Schema meta data
+Base class for creating Schema.org Rich Snippet microdata
 
 =head1 SYNOPSIS
 
-   $schema_meta => HTML::Social::schema->new(
-        card_type => 'summary',
-        site => '@example_twitter',
-        site_name => 'Example Site, anything',
-        title => 'You can have any title you wish here',
-        description => 'Description goes here may have to do a little validation',
-        image => 'www.urltoimage.com/blah.jpg',
-        url  => 'www.someurl.com',
-        player      => 'www.urltovideo.com/blah.jpg',
-        player_width => '500',
-        player_height => '500',            
-   );
+   $schema_meta => HTML::Social::richsnippet->new(
+   
 
-   $schema->create('summary featured_image player');
+    );
+
+   $schema->create('summary');
    
    $schema->create_article;
-   $schema->create_offer;
-   $schema->create_video;
 
 
 =head1 SUBROUTINES/METHODS
 
 =head2 card_options
 
-An Hash Reference of card options available for this meta provider, it is used to map the create function when create is called.
+A Hash Reference of card options available for this meta provider, it is used to map the create function when create is called.
 
 =cut
 
 =head2 build_fields 
     
-An Hash Reference of fields that are attached to the selected card:
+A Hash Reference of fields that are attached to the selected card:
 
 =cut
 
 =head2 create_article
 
-Generate Schema Article meta data
-
-=cut
-
-=head2 create_product
-
-Generate Schema Offer meta data
-
-=cut
-
-=head2 create_video
-
-Generate Schema Video meta data
+Generate Schema.org Rich Snippet Article microdata
 
 =cut
 
