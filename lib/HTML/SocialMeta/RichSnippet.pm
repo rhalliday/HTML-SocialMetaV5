@@ -37,7 +37,7 @@ has '+card_options' => (
 has '+build_fields' => (
 	default => sub {
 		return {
-			article => [qw(item_scope item_type headline author description image_object image author logo_object name)],
+			article => [qw(item_scope item_type headline author description image_object publisher)],
 		};
 	},
 );

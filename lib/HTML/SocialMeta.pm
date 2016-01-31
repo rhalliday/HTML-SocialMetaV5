@@ -173,7 +173,7 @@ sub _build_richsnippet {
                 value           => $self->title,
                 tag             => 'h2',
             },
-            name => {
+            author => {
                 value => q{block},
                 tag => q{h3},
                 itemprop => q{author},
@@ -186,14 +186,11 @@ sub _build_richsnippet {
                     },
                 },
             },
-            name_meta => {
-                value           => $self->site_name,
-            },
             description => {
                 value           => $self->description,
                 tag             => 'span',
             },
-            image => {
+            image_object => {
                 value           => q{block},
                 tag             => q{div},
                 itemprop        => q{image},
