@@ -52,9 +52,7 @@ sub _build_item_scope {
     return {
         value => q{custom},
         tag => q{div},
-        attributes => {
-            itemtype => q{http://schema.org/NewsArticle}
-        },
+        itemtype => q{http://schema.org/NewsArticle}
     };
 }
 
@@ -62,11 +60,9 @@ sub _build_item_type {
     return {
         value => q{custom},
         tag => q{meta},
-        attributes => {
-            itemprop => q{mainEntityOfPage},
-            itemtype => q{https://schema.org/WepPage},
-            itemid => q{https://google.com/article}
-        }
+        itemprop => q{mainEntityOfPage},
+        itemtype => q{https://schema.org/WepPage},
+        itemid => q{https://google.com/article}
     };
 }
 
@@ -85,7 +81,7 @@ override _convert_field => sub {
 override _build_field => sub {
     my ( $self, $args) = @_;
 
-
+    
 };
 
 #

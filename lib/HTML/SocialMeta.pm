@@ -163,57 +163,55 @@ sub _build_opengraph {
 sub _build_richsnippet {
     my $self = shift;
 
-    my $url = $self->app_url ? $self->app_url : $self->url;
-
     return HTML::SocialMeta::RichSnippet->new({
             card_type => {
                  value           => $self->card_type,
             },
             headline => {
                 value           => $self->title,
-                tag             => 'h2',
+                tag             => q{h2},
             },
             author => {
                 value => q{block},
                 tag => q{h3},
                 itemprop => q{author},
                 itemtype => q{https://schema.org/Person},
-                embed_attributes => {
+                embed_meta => {
                     name =>  {
                         value           => $self->site_name,
                         itemprop        => q{https://schema.org/ImageOrganisation},
-                        tag             => 'span',
+                        tag             => q{span},
                     },
                 },
             },
             description => {
                 value           => $self->description,
-                tag             => 'span',
+                tag             => q{span},
             },
             image_object => {
                 value           => q{block},
                 tag             => q{div},
                 itemprop        => q{image},
                 itemtype        => q{https://schema.org/ImageObject},
-                embed_attributes => {
+                embed_meta => {
                     img => {
                         value   => $self->image,
-                        tag     => 'img',
+                        tag     => q{img},
                     },
                      url => {
                         value       => $self->image,
-                        itemprop    => 'url',
-                        tag         => 'meta',
+                        itemprop    => q{url},
+                        tag         => q{meta},
                     },
                     width => {
-                        value       => '800',
-                        itemprop    => 'width',
-                        tag         => 'meta',
+                        value       => q{800},
+                        itemprop    => q{width},
+                        tag         => q{meta},
                     },
                     height => {
-                        value       => '800',   
-                        itemprop    => 'height',
-                        tag         => 'meta',
+                        value       => q{800},   
+                        itemprop    => q{height},
+                        tag         => q{meta},
                     },
                 },
             },
@@ -222,30 +220,30 @@ sub _build_richsnippet {
                 tag             => q{div},
                 itemprop        => q{publisher},
                 itemtype        => q{https://schema.org/Organization},
-                embed_attributes => {
+                embed_meta => {
                     logo => {
                         itemtype => q{https://schema.org/ImageObject},
                         itemprop => q{logo},
                         tag  => q{div},
-                        embed_attributes => {
+                        embed_meta => {
                             img => {
                                 value       => $self->logo,
-                                tag         => 'img',
+                                tag         => q{img},
                             },
                             url => {
                                 value       => $self->logo,
-                                itemprop    => 'url',
-                                tag         => 'meta',
+                                itemprop    => q{url},
+                                tag         => q{meta},
                             },
                             width => {
-                                value       => '600',
-                                itemprop    => 'width',
-                                tag         => 'meta',
+                                value       => q{600},
+                                itemprop    => q{width},
+                                tag         => q{meta},
                             },
                             height => {
-                                value       => '60',   
-                                itemprop    => 'height',
-                                tag         => 'meta',
+                                value       => q{60},   
+                                itemprop    => q{height},
+                                tag         => q{meta},
                             },
                         },
                     },
