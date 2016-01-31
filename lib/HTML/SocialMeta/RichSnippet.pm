@@ -85,42 +85,6 @@ override _convert_field => sub {
 override _build_field => sub {
     my ( $self, $args) = @_;
 
-    my $field_type = $args->{field_type} || $args->{field};
-    my $field = $args->{field};
-    my $attribute = $self->meta_attribute;
-    my $itemprop = $self->{itemprop};
-    my $itemtype = $self->{itemtype};
-    my $tag = $self->$field->{tag};
-
-
-    return sprintf q{<meta %s="%s" content="%s"/>},
-       $attribute, $field_type, $self->$field
-            if !$self->$field->{tag};
-
-    return sprintf q{<%s %s="%s">%s<%s>},
-        $tag, $attribute, $field_type, $self->$field->{value}, $tag  
-            if !$self->$field->{attributes};
-
-    my $meta_attributes = $self->$field->{attributes};    
-
-    return sprintf q{<%s itemscope itemtype="%s">},
-        $tag, $meta_attributes->{itemtype} 
-            if !$meta_attributes->{itemprop};
-
-    return sprintf q{<%s %s="%s" itemscope itemtype="%s">},
-        $tag, $attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}
-            if !$meta_attributes->{itemid} && !$self->$field->{embed_attribute}; 
-
-    return sprintf q{<%s %s="%s" itemscope itemtype="%s" itemid="%s">},
-        $tag, $attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}, $meta_attributes->{itemid}
-            if !$self->$field->{embed_attribute};
-
-    # if field has a embedded attribute then render it too
-    my $inherit_attributes = $self->$field->{embed_attribute};
-    use Data::Dumper;
-    warn Dumper $inherit_attributes->{value};
-    return sprintf q{<%s %s=%s itemscope itemtype="%s"><%s %s="%s"> %s </%s></%s>},
-        $tag, $attribute, $meta_attributes->{itemprop}, $meta_attributes->{itemtype}, $inherit_attributes->{tag}, $attribute, $inherit_attributes->{itemprop}, $inherit_attributes->{value}, $inherit_attributes->{tag}, $tag;
 
 };
 
