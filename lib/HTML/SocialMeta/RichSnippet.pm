@@ -69,13 +69,6 @@ sub _build_item_type {
 override _convert_field => sub {
     my ( $self, $field ) = @_;
 
-    if ( $field =~ s{player_}{}xms ) {
-        return [$field];
-    }
-    else {
-        return [qw(embedURL contentURL)];
-    }
-
 };
 
 override _build_field => sub {
