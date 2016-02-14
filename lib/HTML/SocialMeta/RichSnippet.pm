@@ -93,38 +93,38 @@ override _generate_meta_tag => sub {
 
 override _convert_field => sub{
     my ($self, $field) = @_;
+    
+    return [$self->build_embed_structure($field, $self->$field)];
+};
 
-    my @tags;
+sub build_embed_structure {
+    my ($self, $field, $field_hash) = @_; 
+
     # outa field first
-    my $field_data = { field => $field, tag =>  $self->$field->{tag},  itemtype => $self->$field->{itemtype} };
+    my $field_args = { field => $field, tag =>  $field_hash->{tag}};
   
     # if we have these then add them
-    $field_data->{itemprop} = $self->$field->{itemprop} if $self->$field->{itemprop}; 
-    $field_data->{itemid} = $self->$field->{itemid} if $self->$field->{itemid};
+    $field_args->{itemtype} = $field_hash->{itemtype} if $field_hash->{itemtype};  
+    $field_args->{itemprop} = $field_hash->{itemprop} if $field_hash->{itemprop}; 
+    $field_args->{itemid} = $field_hash->{itemid} if $field_hash->{itemid};
+    $field_args->{value} = $field_hash->{value} if $field_hash->{value};
     
-    # push the first field into the list
-    push @tags, $field_data;
-   
-    # get all the embeded fields
-    my $embed_meta = $self->$field->{embed_meta};
-    
-    # loop through the keys
-    foreach my $tag ( keys %{ $embed_meta }) {
-        my $value = $embed_meta->{$tag}->{value};
-        my $html_tag = $embed_meta->{$tag}->{tag};
-        # build the initial field data
-        $field_data = { field => $tag, value => $value, tag => $html_tag };
-        # add if it exists
-        $field_data->{itemprop} = $embed_meta->{$tag}->{itemprop} if $embed_meta->{$tag}->{itemprop};
-        # push the fields into the list
-        push @tags, $field_data;
+    my $embed_meta = $field_hash->{embed_meta};
+
+    return $field_args unless $embed_meta;
+    my @tags;
+    push @tags, $field_args;
+
+    foreach my $tag (keys %{ $embed_meta }) {
+        $field_args = $self->build_embed_structure($tag, $embed_meta->{$tag});
+        push @tags, $field_args;
     }
-
-    # push the closing tag onto the list
-    push @tags, { tag => $self->$field->{tag} };
-
-    return [@tags];
-};
+    
+    push @tags, { tag => $field_hash->{tag} };
+   
+    warn Dumper @tags; 
+    return @tags; 
+}
 
 override _build_field => sub {
     my ( $self, $args) = @_;
@@ -134,7 +134,6 @@ override _build_field => sub {
     my $itemtype = $args->{itemtype};
     my $itemid = $args->{itemid};
     my $value = $args->{value};
-    my $field = $args->{field};
     # global args
     my $meta_att = $self->meta_attribute;
     my $meta_name = $self->meta_namespace;
