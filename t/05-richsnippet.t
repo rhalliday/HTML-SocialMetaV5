@@ -18,8 +18,10 @@ my $bad_meta_tags = HTML::SocialMeta->new(
     url	 => 'www.someurl.com',
 );
 
+ok( $bad_meta_tags->richsnippet->create_article );
 use Data::Dumper;
 warn Dumper $bad_meta_tags->richsnippet->create_article;
+
 
 done_testing;
 1;

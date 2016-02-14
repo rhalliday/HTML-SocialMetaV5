@@ -12,8 +12,8 @@ our $VERSION = '0.5_1';
 has 'card_type' => ( isa => 'Str', is => 'rw', lazy => 1, default => q{} );
 has 'card' => ( isa => 'Str', is => 'ro', lazy => 1, default => q{} );
 has [
-    qw(name site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width fb_app_id)
-  ] => (
+    qw(name site site_name title description image url creator operatingSystem app_country app_name app_id app_url player player_height player_width fb_app_id logo)  
+] => (
     is      => 'ro',
     isa     => 'Str',
     lazy    => 1,
@@ -169,10 +169,11 @@ sub _build_richsnippet {
             },
             headline => {
                 value           => $self->title,
+                itemprop        => 'headline',
                 tag             => q{h2},
             },
             author => {
-                value => q{block},
+                value => q{custom},
                 tag => q{h3},
                 itemprop => q{author},
                 itemtype => q{https://schema.org/Person},
@@ -187,6 +188,7 @@ sub _build_richsnippet {
             description => {
                 value           => $self->description,
                 tag             => q{span},
+                itemprop        => q{description}
             },
             image_object => {
                 value           => q{block},
@@ -249,6 +251,7 @@ sub _build_richsnippet {
                     },
                     name => {
                         tag => q{meta},
+                        itemprop => q{name},
                         value => $self->name,
                     },
                 },

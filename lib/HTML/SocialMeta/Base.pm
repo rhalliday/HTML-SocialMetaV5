@@ -15,8 +15,8 @@ has [qw(card_type name url)] => (
 has [qw(card type)] => ( isa => 'Str', is => 'rw', lazy => 1, default => sub { {}  }, ); 
 
 has [
-    qw(site fb_app_id site_name name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width headline)
-  ] => (
+    qw(site fb_app_id site_name name title description image creator operatingSystem app_country app_name app_id app_url player player_height player_width headline author image_object publisher)] 
+=> (
     is      => 'ro',
     isa     => 'HashRef',
     lazy    => 1,
@@ -52,16 +52,12 @@ sub build_meta_tags {
 
     my @meta_tags;
 
-    if ( $self->meta_attribute eq q{itemprop} ) {
-        push @meta_tags, $self->item_type->{value};
-    }
-
     foreach my $field ( $self->required_fields($field_type) ) {
 
         # check the field has a value set
         $self->_validate_field_value($field);
-
-        push @meta_tags, $self->_generate_meta_tag($field);
+        
+       push @meta_tags, $self->_generate_meta_tag($field);
     }
 
     return join "\n", @meta_tags;

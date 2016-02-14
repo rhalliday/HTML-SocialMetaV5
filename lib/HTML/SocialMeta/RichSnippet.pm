@@ -12,18 +12,40 @@ has 'meta_attribute' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'itemprop' );
 has 'meta_namespace' =>
   ( isa => 'Str', is => 'ro', required => 1, default => 'content' );
-has 'item_type' => ( isa => 'Str', is => 'rw', required => 1, default => q{} );
+has 'meta_scope' =>
+   ( isa => 'Str', is => 'ro', required => 1, default => 'itemscope' );
+has 'meta_type' => 
+    ( isa => 'Str', is => 'ro', required => 1, default => 'itemtype' );
+has 'meta_id' =>
+    ( isa => 'Str', is => 'ro', required => 1, default => 'itemid' );
 
 has 'item_scope' => (
     is => 'rw',
     isa => 'HashRef',
-    builder => '_build_item_scope',
+    lazy => 1,
+    default => sub {
+        return {
+            value => q{custom},
+            tag => q{div},
+            itemtype => q{http://schema.org/NewsArticle}
+        }
+    }
 );
 
 has 'item_type' => (
     is => 'rw',
     isa => 'HashRef',
-    builder => '_build_item_type',
+    lazy => 1,
+    default => sub {
+        return { 
+            value => q{custom},
+            tag => q{meta},
+            itemprop => q{mainEntityOfPage},
+            itemtype => q{https://schema.org/WepPage},
+            itemid => q{https://google.com/article}
+        }
+    }
+
 );
 
 has '+card_options' => (
@@ -48,32 +70,111 @@ sub create_article {
     return $self->build_meta_tags('article');
 }
 
-sub _build_item_scope {
-    return {
-        value => q{custom},
-        tag => q{div},
-        itemtype => q{http://schema.org/NewsArticle}
-    };
-}
-
-sub _build_item_type {
-    return {
-        value => q{custom},
-        tag => q{meta},
-        itemprop => q{mainEntityOfPage},
-        itemtype => q{https://schema.org/WepPage},
-        itemid => q{https://google.com/article}
-    };
-}
-
-override _convert_field => sub {
+override _generate_meta_tag => sub {
     my ( $self, $field ) = @_;
 
+    use Data::Dumper;
+    # if we do not have embed_meta then just build the field
+    return $self->_build_field( $self->$field )
+        if !$self->$field->{embed_meta}; 
+
+    my @tags = ();
+    
+    # covert the field into multiple fields
+    for ( @{ $self->_convert_field($field) }) {
+
+        push @tags, $self->_build_field({ %{$_} });
+    }
+    
+    #push @tags, $self->_build_field({ tag => $self->item_scope->{tag} });
+
+    return @tags;
+};
+
+override _convert_field => sub{
+    my ($self, $field) = @_;
+
+    my @tags;
+    # outa field first
+    my $field_data = { field => $field, tag =>  $self->$field->{tag},  itemtype => $self->$field->{itemtype} };
+  
+    # if we have these then add them
+    $field_data->{itemprop} = $self->$field->{itemprop} if $self->$field->{itemprop}; 
+    $field_data->{itemid} = $self->$field->{itemid} if $self->$field->{itemid};
+    
+    # push the first field into the list
+    push @tags, $field_data;
+   
+    # get all the embeded fields
+    my $embed_meta = $self->$field->{embed_meta};
+    
+    # loop through the keys
+    foreach my $tag ( keys %{ $embed_meta }) {
+        my $value = $embed_meta->{$tag}->{value};
+        my $html_tag = $embed_meta->{$tag}->{tag};
+        # build the initial field data
+        $field_data = { field => $tag, value => $value, tag => $html_tag };
+        # add if it exists
+        $field_data->{itemprop} = $embed_meta->{$tag}->{itemprop} if $embed_meta->{$tag}->{itemprop};
+        # push the fields into the list
+        push @tags, $field_data;
+    }
+
+    # push the closing tag onto the list
+    push @tags, { tag => $self->$field->{tag} };
+
+    return [@tags];
 };
 
 override _build_field => sub {
     my ( $self, $args) = @_;
+    # field args
+    my $tag = $args->{tag};
+    my $itemprop = $args->{itemprop};
+    my $itemtype = $args->{itemtype};
+    my $itemid = $args->{itemid};
+    my $value = $args->{value};
+    my $field = $args->{field};
+    # global args
+    my $meta_att = $self->meta_attribute;
+    my $meta_name = $self->meta_namespace;
+    my $meta_scope = $self->meta_scope;
+    my $meta_type = $self->meta_type;
+    my $meta_id = $self->meta_id;
  
+    # <tag itemscope itemprop="field" itemtype="url" itemid="some google url" />
+    return sprintf q{<%s %s %s="%s" %s="%s" %s="%s"/>},
+        $tag, $meta_scope, $meta_att, $itemprop, $meta_type, $itemtype, $meta_id, $itemid  
+            if $itemid;
+    
+    # <tag itemprop="itemprop" itemscope content="itemtype" />
+    return sprintf q{<%s %s="%s" %s %s="%s"/>},
+        $tag, $meta_att, $itemprop, $meta_scope, $meta_name, $itemtype
+            if $itemprop && $itemtype;
+    
+    # <tag itemprop="itemprop" content="value" />
+    return sprintf q{<%s %s="%s" %s="%s"/>},
+        $tag, $meta_att, $itemprop, $meta_name, $value
+            if $tag eq q{meta};
+    
+    # <tag itemscope itemtype="url">
+    return sprintf q{<%s %s %s="%s">},
+        $tag, $meta_scope, $meta_type, $itemtype
+            if $itemtype;
+    
+    # <tag itemtype="url">
+    return sprintf q{<%s src="%s">},
+        $tag, $value
+            if $tag eq q{img};
+
+    # <tag itemprop="field">value</tag>
+    return sprintf q{<%s %s="%s">%s</%s>},
+        $tag, $meta_att, $itemprop, $value, $tag
+            if $value;
+    
+    # </tag>
+    return sprintf q{</%s>},
+        $tag;
 };
 
 #
