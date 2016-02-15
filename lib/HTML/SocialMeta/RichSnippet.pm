@@ -94,7 +94,7 @@ override _generate_meta_tag => sub {
 override _convert_field => sub{
     my ($self, $field) = @_;
     
-    return [$self->build_embed_structure($field, $self->$field)];
+    return $self->build_embed_structure($field, $self->$field);
 };
 
 sub build_embed_structure {
@@ -111,19 +111,17 @@ sub build_embed_structure {
     
     my $embed_meta = $field_hash->{embed_meta};
 
-    return $field_args unless $embed_meta;
+    return [ $field_args ] unless $embed_meta;
     my @tags;
     push @tags, $field_args;
 
     foreach my $tag (keys %{ $embed_meta }) {
         $field_args = $self->build_embed_structure($tag, $embed_meta->{$tag});
-        push @tags, $field_args;
+        push @tags, @{$field_args};
     }
     
     push @tags, { tag => $field_hash->{tag} };
-   
-    warn Dumper @tags; 
-    return @tags; 
+    return \@tags; 
 }
 
 override _build_field => sub {
